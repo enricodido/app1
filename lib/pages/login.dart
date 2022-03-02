@@ -1,3 +1,4 @@
+import '../components/customDialog.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_util.dart';
 import '../components/flutter_flow_widget.dart';
@@ -5,6 +6,8 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../main.dart';
+import '../repositories/repository.dart';
 import 'home.dart';
 
 class LoginPageWidget extends StatefulWidget {
@@ -14,18 +17,63 @@ class LoginPageWidget extends StatefulWidget {
 }
 
 class _LoginPageWidgetState extends State<LoginPageWidget> {
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  late bool passwordVisibility;
-  final formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+
+  TextEditingController textFieldEmailController = TextEditingController();
+  TextEditingController textFieldPasswordController = TextEditingController();
+
+  String emailError = 'email richiesta.';
+  String passwordError = 'Password richiesta.';
+
+  bool textFieldPasswordVisibility = false;
+  bool _loadingButton = false;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void onSubmit() async {
+    final email = textFieldEmailController.text.trim();
+    final password = textFieldPasswordController.text.trim();
+
+    if (email.isNotEmpty && password.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+
+        final jwt = await getIt
+            .get<Repository>()
+            .userRepository!
+            .login(context, email.toString(), password.toString());
+        if(jwt != null) {
+          Navigator.pushNamed(context, HomePagWidget.ROUTE_NAME);
+        }
+
+      } catch (error) {
+        if ((error as RequestError).error == 'Unauthorized') {
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.WARNING,
+            msg: 'Credenziali Non Corrette!',
+          );
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+
+    } else {
+      showCustomDialog(
+        context: context,
+        type: CustomDialog.WARNING,
+        msg:'Dati Mancanti!',
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController(text: 'Mario@rossi.it');
-    textController2 = TextEditingController(text: '12345');
-    passwordVisibility = false;
   }
 
   @override
@@ -37,7 +85,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Form(
-            key: formKey,
+            key: scaffoldKey,
             autovalidateMode: AutovalidateMode.disabled,
             child: Container(
               width: MediaQuery.of(context).size.width,
@@ -47,7 +95,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: Image.asset(
-                    'assets/images/AgrosApp_BackImage.jpg',
+                    'images/landscape.jpg',
                   ).image,
                 ),
               ),
@@ -69,7 +117,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Image.asset(
-                              'assets/images/AgrosApp-logo.png',
+                              'images/agrosApp-logo.png',
                               width: MediaQuery.of(context).size.width * 0.4,
                               height: MediaQuery.of(context).size.height * 0.2,
                               fit: BoxFit.contain,
@@ -98,60 +146,43 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       10, 0, 10, 0),
                                   child: TextFormField(
-                                    onChanged: (_) => EasyDebounce.debounce(
-                                      'textController1',
-                                      Duration(milliseconds: 2000),
-                                          () => setState(() {}),
-                                    ),
-                                    controller: textController1,
+                                    controller: textFieldEmailController,
                                     obscureText: false,
                                     decoration: InputDecoration(
-                                      labelText: 'E-mail',
+                                      labelText: 'Email',
+                                      labelStyle: FlutterFlowTheme.bodyText1.override(
+                                        fontFamily: 'Open Sans',
+                                        color: Color(0xFF707070),
+                                      ),
+                                      hintText: 'Inserisci Email',
+                                      hintStyle: FlutterFlowTheme.bodyText1.override(
+                                        fontFamily: 'Open Sans',
+                                        color: Color(0xFF707070),
+                                      ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0xFF009648),
-                                          width: 2,
+                                          width: 1,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
                                           color: Color(0xFF009648),
-                                          width: 2,
+                                          width: 1,
                                         ),
                                         borderRadius: BorderRadius.circular(15),
                                       ),
+                                      contentPadding:
+                                      EdgeInsetsDirectional.fromSTEB(18, 18, 18, 18),
                                       prefixIcon: Icon(
                                         Icons.mail,
                                       ),
-                                      suffixIcon: textController1
-                                          .text.isNotEmpty
-                                          ? InkWell(
-                                        onTap: () => setState(
-                                              () => textController1.clear(),
-                                        ),
-                                        child: Icon(
-                                          Icons.clear,
-                                          color: Color(0xFF757575),
-                                          size: 22,
-                                        ),
-                                      )
-                                          : null,
                                     ),
-                                    style: FlutterFlowTheme
-                                        .bodyText1
-                                        .override(
-                                      fontFamily: 'Poppins',
-                                      fontSize: 16,
+                                    style: FlutterFlowTheme.bodyText1.override(
+                                      fontFamily: 'Open Sans',
+                                      color: Color(0xFF707070),
                                     ),
-                                    keyboardType: TextInputType.emailAddress,
-                                    validator: (val) {
-                                      if (val!.isEmpty) {
-                                        return 'Inserire la mail';
-                                      }
-
-                                      return null;
-                                    },
                                   ),
                                 ),
                               ),
@@ -184,61 +215,57 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           10, 0, 10, 0),
                                       child: TextFormField(
-                                        controller: textController2,
-                                        obscureText: !passwordVisibility,
+                                        controller: textFieldPasswordController,
+                                        obscureText: !textFieldPasswordVisibility,
                                         decoration: InputDecoration(
                                           labelText: 'Password',
+                                          labelStyle: FlutterFlowTheme.bodyText1.override(
+                                            fontFamily: 'Open Sans',
+                                            color: Color(0xFF707070),
+                                          ),
+                                          hintText: 'Password',
+                                          hintStyle: FlutterFlowTheme.bodyText1.override(
+                                            fontFamily: 'Open Sans',
+                                            color: Color(0xFF707070),
+                                          ),
                                           enabledBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                               color: Color(0xFF009648),
-                                              width: 2,
+                                              width: 1,
                                             ),
-                                            borderRadius:
-                                            BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(15),
                                           ),
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(
                                               color: Color(0xFF009648),
-                                              width: 2,
+                                              width: 1,
                                             ),
-                                            borderRadius:
-                                            BorderRadius.circular(15),
+                                            borderRadius: BorderRadius.circular(15),
                                           ),
+                                          contentPadding:
+                                          EdgeInsetsDirectional.fromSTEB(18, 18, 18, 18),
                                           prefixIcon: Icon(
                                             Icons.vpn_key,
                                           ),
                                           suffixIcon: InkWell(
                                             onTap: () => setState(
-                                                  () => passwordVisibility =
-                                              !passwordVisibility,
+                                                  () => textFieldPasswordVisibility =
+                                              !textFieldPasswordVisibility,
                                             ),
                                             child: Icon(
-                                              passwordVisibility
+                                              textFieldPasswordVisibility
                                                   ? Icons.visibility_outlined
-                                                  : Icons
-                                                  .visibility_off_outlined,
+                                                  : Icons.visibility_off_outlined,
                                               color: Color(0xFF757575),
                                               size: 22,
                                             ),
                                           ),
                                         ),
-                                        style: FlutterFlowTheme
-                                            .bodyText1
-                                            .override(
-                                          fontFamily: 'Poppins',
-                                          fontSize: 16,
+                                        style: FlutterFlowTheme.bodyText1.override(
+                                          fontFamily: 'Open Sans',
+                                          color: Color(0xFF707070),
                                         ),
-                                        keyboardType:
-                                        TextInputType.visiblePassword,
-                                        validator: (val) {
-                                          if (val!.isEmpty) {
-                                            return 'Inserire Password';
-                                          }
-                                          if (val.length < 5) {
-                                            return 'Inserire la password di almeno 5 caratteri';
-                                          }
-                                          return null;
-                                        },
+                                        keyboardType: TextInputType.visiblePassword,
                                       ),
                                     ),
                                   ),
@@ -275,17 +302,7 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FFButtonWidget(
-                            onPressed: () async {
-                              await Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.fade,
-                                  duration: Duration(milliseconds: 0),
-                                  reverseDuration: Duration(milliseconds: 0),
-                                  child: HomePagWidget(),
-                                ),
-                              );
-                            },
+                            onPressed: onSubmit,
                             text: 'Accedi',
                             options: FFButtonOptions(
                               width: 150,

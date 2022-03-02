@@ -8,20 +8,42 @@ import 'package:agros_app/pages/new_labeling.dart';
 import 'package:agros_app/pages/new_shipment.dart';
 import 'package:agros_app/pages/search.dart';
 import 'package:agros_app/pages/shipment.dart';
+import 'package:agros_app/repositories/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:agros_app/pages/home.dart';
 
+import 'blocs/user_me.dart';
+
+final getIt = GetIt.instance;
+
 void main() {
-  runApp(MyApp());
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+  getIt.registerSingleton(Repository());
+  runApp(
+      MultiBlocProvider(
+          providers: [
+          BlocProvider(
+          create: (_) => UserMeBloc(
+      UserMeBlocStateLoading()
+  ),
+  ),
+  ],
+  child: MyApp(),
+      ),);
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Deltacall Checklist',
+      title: 'Agros App',
       debugShowCheckedModeBanner: false,
       initialRoute: LoginPageWidget.ROUTE_NAME,
       localizationsDelegates: const [
