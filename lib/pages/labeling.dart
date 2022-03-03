@@ -1,9 +1,17 @@
-
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../blocs/get_label.dart';
 import '../components/flutter_flow_theme.dart';
+import '../main.dart';
+import '../repositories/repository.dart';
+import '../theme/color.dart';
 import 'labeling_detail.dart';
+import 'login.dart';
 import 'new_labeling.dart';
 
 class EtichettaturaWidget extends StatefulWidget {
@@ -16,13 +24,28 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocRefreshEvent());
+      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocGetEvent());
+    });
+  }
+
+  void logout(BuildContext context) {
+    getIt.get<Repository>().sessionRepository!.logout();
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginPageWidget.ROUTE_NAME, ModalRoute.withName('/'));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),
@@ -76,106 +99,107 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DettaglioEtichettaturaWidget(),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Color(0xFFF5F5F5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
-                                child: Text(
-                                  'Dettagli etichettatura  #3',
-                                  style: FlutterFlowTheme
-                                      .bodyText1
-                                      .override(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                  BlocBuilder<GetLabelBloc, GetLabelBlocState>(
+                      builder: (context, state) {
+                    if (state is GetLabelBlocStateLoading)
+                      return Center(child: CircularProgressIndicator());
+                    else {
+                      final labels = (state as GetLabelBlocStateLoaded).labels;
+                      if (labels.isNotEmpty) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.zero,
+                            itemCount: labels.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final label = labels[index];
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: InkWell(
+                                  onTap: ()  {
+                                     Navigator.pushNamed(
+                                      context,
+                                      DettaglioEtichettaturaWidget.ROUTE_NAME
+                                    );
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    color: Color(0xFFF5F5F5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 10),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 10, 0, 5),
+                                            child: Text(
+                                              'Dettagli etichettatura ' + label.progressive,
+
+                                              style: FlutterFlowTheme.bodyText1
+                                                  .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(
+                                            color: Color(0xFF6C6C6C),
+                                          ),
+                                          Text(
+                                            'Lotto: ' +  label.batch + '\n'
+                                            'Prodotto: ' + label.product.description + '\n'
+                                            'Peso: ' + label.total_weight + ' kg\n'
+                                            'Squadra di raccolta: ' + label.team.description,
+                                            style: FlutterFlowTheme.bodyText1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Divider(
-                                color: Color(0xFF6C6C6C),
-                              ),
-                              Text(
-                                'N.lotto: 321785\nMateria prima: Patane\nPeso: 500 kg(unità misura)\nSquadra di raccolta: #3',
-                                style: FlutterFlowTheme.bodyText1,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                DettaglioEtichettaturaWidget(),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Color(0xFFF5F5F5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
-                                child: Text(
-                                  'Dettagli etichettatura  #4',
-                                  style: FlutterFlowTheme
-                                      .bodyText1
-                                      .override(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                              );
+                            });
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.folderOpen,
+                                    color: firstColor,
+                                    size: 50,
                                   ),
                                 ),
-                              ),
-                              Divider(
-                                color: Color(0xFF6C6C6C),
-                              ),
-                              Text(
-                                'N.lotto: 3545\nMateria prima: Broccoli\nPeso: 100 kg(unità misura)\nSquadra di raccolta: #6',
-                                style: FlutterFlowTheme.bodyText1,
-                              ),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: AutoSizeText(
+                                    'NESSUN ELEMENTO',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        );
+                      }
+                    }
+                  })
                 ],
               ),
             ),

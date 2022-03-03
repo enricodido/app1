@@ -1,9 +1,16 @@
 
 
 import 'dart:io';
+import 'package:agros_app/repositories/boxes.dart';
+import 'package:agros_app/repositories/customer.dart';
+import 'package:agros_app/repositories/pallet_type.dart';
+import 'package:agros_app/repositories/product.dart';
 import 'package:agros_app/repositories/session.dart';
+import 'package:agros_app/repositories/team.dart';
 import 'package:agros_app/repositories/user.dart';
 import 'package:http/http.dart' as http;
+
+import 'label.dart';
 
 
 //const String HOST = 'https://checklist.deltacall.it/api/';
@@ -14,12 +21,23 @@ class Repository {
     http = HttpClient(this);
     userRepository = UserRepository(this);
     sessionRepository = SessionRepository(this);
-
+    labelRepository = LabelRepository(this);
+    boxesRepository = BoxesRepository(this);
+    customerRepository  = CustomerRepository(this);
+    teamRepository = TeamRepository(this);
+    palletRepository = PalletTypeRepository(this);
+    productRepository = ProductRepository(this);
   }
 
   HttpClient? http;
   UserRepository? userRepository;
   SessionRepository? sessionRepository;
+  LabelRepository? labelRepository;
+  BoxesRepository? boxesRepository;
+  CustomerRepository? customerRepository;
+  TeamRepository? teamRepository;
+  PalletTypeRepository? palletRepository;
+  ProductRepository? productRepository;
 
 }
 

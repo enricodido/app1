@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/user_me.dart';
 import '../components/flutter_flow_theme.dart';
+import '../main.dart';
+import '../repositories/repository.dart';
 import 'labeling.dart';
+import 'login.dart';
 import 'movements.dart';
 
 class HomePagWidget extends StatefulWidget {
@@ -22,8 +25,18 @@ class _HomePagWidgetState extends State<HomePagWidget> {
     BlocProvider.of<UserMeBloc>(context).add(UserMeBlocGetEvent());
   }
 
+  void logout(BuildContext context) {
+    getIt
+        .get<Repository>()
+        .sessionRepository!
+        .logout();
+    Navigator.pushNamedAndRemoveUntil(
+        context, LoginPageWidget.ROUTE_NAME, ModalRoute.withName('/'));
+  }
+
   @override
   Widget build(BuildContext context) {
+    refreshUserMe(context);
     return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -104,13 +117,10 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   20, 20, 20, 20),
                               child: InkWell(
-                                onTap: () async {
-                                  await Navigator.push(
+                                onTap: () {
+                                   Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          EtichettaturaWidget(),
-                                    ),
+                                    EtichettaturaWidget.ROUTE_NAME
                                   );
                                 },
                                 child: Container(
@@ -149,12 +159,10 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   20, 20, 20, 20),
                               child: InkWell(
-                                onTap: () async {
-                                  await Navigator.push(
+                                onTap: () {
+                                   Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SpedizioneWidget(),
-                                    ),
+                                    SpedizioneWidget.ROUTE_NAME
                                   );
                                 },
                                 child: Container(
@@ -198,13 +206,10 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: InkWell(
-                                  onTap: () async {
-                                    await Navigator.push(
+                                  onTap: ()  {
+                                     Navigator.pushNamed(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            SpostamentoMagazzinoWidget(),
-                                      ),
+                                      SpostamentoMagazzinoWidget.ROUTE_NAME
                                     );
                                   },
                                   child: Column(
@@ -238,13 +243,10 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                               padding: EdgeInsetsDirectional.fromSTEB(
                                   20, 20, 20, 20),
                               child: InkWell(
-                                onTap: () async {
-                                  await Navigator.push(
+                                onTap: ()  {
+                                   Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          RicercaProdottiWidget(),
-                                    ),
+                                    RicercaProdottiWidget.ROUTE_NAME
                                   );
                                 },
                                 child: Container(

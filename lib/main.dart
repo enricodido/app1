@@ -17,6 +17,12 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:agros_app/pages/home.dart';
 
+import 'blocs/get_boxes_type.dart';
+import 'blocs/get_customer.dart';
+import 'blocs/get_label.dart';
+import 'blocs/get_pallet.dart';
+import 'blocs/get_product.dart';
+import 'blocs/get_team.dart';
 import 'blocs/user_me.dart';
 
 final getIt = GetIt.instance;
@@ -27,16 +33,33 @@ void main() {
   ));
   getIt.registerSingleton(Repository());
   runApp(
-      MultiBlocProvider(
-          providers: [
-          BlocProvider(
-          create: (_) => UserMeBloc(
-      UserMeBlocStateLoading()
-  ),
-  ),
-  ],
-  child: MyApp(),
-      ),);
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => UserMeBloc(UserMeBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetLabelBloc(GetLabelBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetBoxesBloc(GetBoxesBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetTeamBloc(GetTeamBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetPalletBloc(GetPalletBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetProductBloc(GetProductBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetCustomerBloc(GetCustomerBlocStateLoading()),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -63,10 +86,9 @@ class MyApp extends StatelessWidget {
         tabBarTheme: TabBarTheme(
           labelStyle: GoogleFonts.montserrat(
               textStyle: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              )),
-
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          )),
         ),
       ),
       routes: {
@@ -74,12 +96,15 @@ class MyApp extends StatelessWidget {
         HomePagWidget.ROUTE_NAME: (_) => HomePagWidget(),
         SpedizioneWidget.ROUTE_NAME: (_) => SpedizioneWidget(),
         DettagliSpedizioneWidget.ROUTE_NAME: (_) => DettagliSpedizioneWidget(),
-        DettaglioNuovaSpedizioneWidget.ROUTE_NAME: (_) => DettaglioNuovaSpedizioneWidget(),
+        DettaglioNuovaSpedizioneWidget.ROUTE_NAME: (_) =>
+            DettaglioNuovaSpedizioneWidget(),
         EtichettaturaWidget.ROUTE_NAME: (_) => EtichettaturaWidget(),
-        DettaglioEtichettaturaWidget.ROUTE_NAME: (_) => DettaglioEtichettaturaWidget(),
+        DettaglioEtichettaturaWidget.ROUTE_NAME: (_) =>
+            DettaglioEtichettaturaWidget(),
         NuovaEtichettaturaWidget.ROUTE_NAME: (_) => NuovaEtichettaturaWidget(),
         RicercaProdottiWidget.ROUTE_NAME: (_) => RicercaProdottiWidget(),
-        SpostamentoMagazzinoWidget.ROUTE_NAME: (_) => SpostamentoMagazzinoWidget(),
+        SpostamentoMagazzinoWidget.ROUTE_NAME: (_) =>
+            SpostamentoMagazzinoWidget(),
         NuovaSpedizioneWidget.ROUTE_NAME: (_) => NuovaSpedizioneWidget(),
       },
     );
