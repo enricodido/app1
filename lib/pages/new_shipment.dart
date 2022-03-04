@@ -15,10 +15,9 @@ class NuovaSpedizioneWidget extends StatefulWidget {
 }
 
 class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
-  late String dropDownValue1;
+
   late TextEditingController textController1;
   late TextEditingController textController2;
-  late String dropDownValue2;
   late TextEditingController textController3;
   late TextEditingController textController4;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -120,9 +119,9 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue1 ??= 'Trasportatore',
+                      initialOption: '',
                       options: ['Trasportatore 1', 'trasportatore 2'].toList(),
-                      onChanged: (val) => setState(() => dropDownValue1 = val),
+                      onChanged: (val) => setState(() => val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -189,9 +188,9 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue2 ??= 'Codice cliente',
+                      initialOption: 'Codice cliente',
                       options: ['Cliente 1', 'Cliente 2'].toList(),
-                      onChanged: (val) => setState(() => dropDownValue2 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:

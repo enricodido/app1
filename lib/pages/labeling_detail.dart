@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
@@ -26,17 +28,23 @@ class _DettaglioEtichettaturaWidgetState
   late String dropDownValue5;
   late String dropDownValue6;
   late TextEditingController textController6;
+
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
     textController1 = TextEditingController(text: 'Calcolato in automatico');
-    textController2 = TextEditingController(text: '12/01/2022');
+    textController2 = TextEditingController(text: formattedDate);
     textController3 = TextEditingController(text: '342');
     textController4 = TextEditingController(text: '150');
     textController5 = TextEditingController(text: '5');
     textController6 = TextEditingController(text: 'Dettaglio note.......');
+
   }
 
   @override
@@ -82,7 +90,7 @@ class _DettaglioEtichettaturaWidgetState
                       controller: textController1,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Progressivo Pedana per lotto',
+                        labelText: 'Progressivo Pedana',
                         hintText: 'Calcolato in automatico',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -108,9 +116,9 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue1 ??= 'Tipologia Pedana',
+                      initialOption: 'Tipologia Pedana',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue1 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -132,9 +140,9 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue2 ??= 'Materia prima',
+                      initialOption:  'Materia prima',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue2 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -155,9 +163,9 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue3 ??= 'Varietà',
+                      initialOption:  'Varietà',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue3 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -266,9 +274,9 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue4 ??= 'Unità di misura',
+                      initialOption: 'Unità di misura',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue4 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -320,10 +328,10 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue5 ??=
+                      initialOption:
                       'Tipo e proprietà delle casse',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue5 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -344,9 +352,9 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue6 ??= 'Squadra di raccolta',
+                      initialOption: 'Squadra di raccolta',
                       options: [],
-                      onChanged: (val) => setState(() => dropDownValue6 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:

@@ -6,6 +6,7 @@ import 'package:agros_app/repositories/customer.dart';
 import 'package:agros_app/repositories/pallet_type.dart';
 import 'package:agros_app/repositories/product.dart';
 import 'package:agros_app/repositories/session.dart';
+import 'package:agros_app/repositories/shipment.dart';
 import 'package:agros_app/repositories/team.dart';
 import 'package:agros_app/repositories/user.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +28,7 @@ class Repository {
     teamRepository = TeamRepository(this);
     palletRepository = PalletTypeRepository(this);
     productRepository = ProductRepository(this);
+    shipmentRepository = ShipmentRepository(this);
   }
 
   HttpClient? http;
@@ -38,7 +40,7 @@ class Repository {
   TeamRepository? teamRepository;
   PalletTypeRepository? palletRepository;
   ProductRepository? productRepository;
-
+  ShipmentRepository? shipmentRepository;
 }
 
 class HttpClient {

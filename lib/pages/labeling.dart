@@ -32,6 +32,11 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
       BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocGetEvent());
     });
   }
+  void create() async {
+    getIt.get<Repository>().labelRepository!.create();
+      Navigator.pushNamed(context, NuovaEtichettaturaWidget.ROUTE_NAME);
+
+  }
 
   void logout(BuildContext context) {
     getIt.get<Repository>().sessionRepository!.logout();
@@ -51,13 +56,8 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NuovaEtichettaturaWidget(),
-            ),
-          );
+        onPressed: ()  {
+          create();
         },
         backgroundColor: FlutterFlowTheme.primaryColor,
         icon: Icon(
@@ -67,7 +67,7 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
         ),
         elevation: 8,
         label: Text(
-          'Aggiungi',
+          'Crea Nuova',
           style: FlutterFlowTheme.bodyText1.override(
             fontFamily: 'Poppins',
             color: Colors.white,

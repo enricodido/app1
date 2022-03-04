@@ -5,8 +5,10 @@ import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/get_customer.dart';
+import '../blocs/get_label.dart';
 import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
@@ -17,9 +19,18 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../main.dart';
 import '../model/customers.dart';
+import '../model/label.dart';
+import '../repositories/repository.dart';
 import 'labeling.dart';
 
+   /* class NuovaEtichettaturaWidgetArg {
+      NuovaEtichettaturaWidgetArg({
+        required this.label,
+      });
+      final Label label;
+    }*/
 class NuovaEtichettaturaWidget extends StatefulWidget {
   static const ROUTE_NAME = '/new_labeling';
   @override
@@ -28,23 +39,36 @@ class NuovaEtichettaturaWidget extends StatefulWidget {
 }
 
 class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  late TextEditingController textController3;
-  late TextEditingController textController4;
-  late TextEditingController textController5;
-  late TextEditingController textController6;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+  TextEditingController textController1 = TextEditingController();
+  TextEditingController textController2 = TextEditingController();
+  TextEditingController textController3 = TextEditingController();
+  TextEditingController textController4 = TextEditingController();
+  TextEditingController textController5 = TextEditingController();
+  TextEditingController textController6 = TextEditingController();
+
+
   BoxModel? selectedBox;
   TeamModel? selectedTeam;
   PalletModel? selectedPallet;
   ProductModel? selectedProduct;
   CustomerModel? selectedCustomer;
+  Label? label;
 
+  String textController1error = 'Richiesta';
+  String textController2error = 'Richiesta';
+  String textController3error = 'Richiesta';
+  String textController4error = 'Richiesta';
+  String textController5error = 'Richiesta';
+  String textController6error = 'Richiesta';
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd-MM-yyyy').format(now);
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
       BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocRefreshEvent());
       BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocGetEvent());
@@ -60,17 +84,17 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
 
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
+      textController2 = TextEditingController(text: formattedDate);
     });
 
-
-    textController1 = TextEditingController(text: 'Calcolato in automatico');
-    textController2 = TextEditingController(text: 'data messa automaticamente');
-    textController3 = TextEditingController(text: 'Esempio: 342');
-    textController4 = TextEditingController(text: 'Esempio: 150');
-    textController5 = TextEditingController(text: 'Esempio: 5');
-    textController6 =
-        TextEditingController(text: 'Questo lotto ha questo dettaglio...');
   }
+  void recordProduct(ProductModel product, String label_id) {
+    getIt
+        .get<Repository>()
+        .labelRepository!
+        .recordProduct(context, product.id.toString(), label.toString());
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +144,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                       controller: textController1,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Progressivo Pedana per lotto',
-                        hintText: 'Calcolato in automatico',
+                        labelText: 'Progressivo Pedana  ',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -166,40 +189,50 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         // print(selectedVehicle?.description);
 
                         if (pallets.isNotEmpty) {
-                          return DropdownButton<PalletModel>(
-                            hint: Text('Seleziona Tipo di Bancale'),
-                            isExpanded: true,
-                            value: selectedPallet,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 25,
-                            elevation: 16,
-                            style: const TextStyle(
-                              color:  Color(0xFF009648),
-                              fontSize: 20,
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+
                             ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black,
+                            child: DropdownButton<PalletModel>(
+                              hint: Text('Seleziona Tipo di Bancale'),
+                              isExpanded: true,
+                              value: selectedPallet,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (PalletModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedPallet = value;
+                                });
+                              },
+                              items: pallets.map<DropdownMenuItem<PalletModel>>(
+                                      (PalletModel pallet) {
+                                    return DropdownMenuItem<PalletModel>(
+                                      value: pallet,
+                                      child: Text(
+                                        pallet.description,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Color(0xFF009648),
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
                             ),
-                            onChanged: (PalletModel? value) {
-                              setState(() {
-                                print(value);
-                                selectedPallet = value;
-                              });
-                            },
-                            items: pallets.map<DropdownMenuItem<PalletModel>>(
-                                    (PalletModel pallet) {
-                                  return DropdownMenuItem<PalletModel>(
-                                    value: pallet,
-                                    child: Text(
-                                      pallet.description,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color:  Color(0xFF009648),
-                                          fontFamily: 'Open Sans'),
-                                    ),
-                                  );
-                                }).toList(),
                           );
                         } else {
                           return Text('Nessun Tipo di Bancale');
@@ -218,40 +251,51 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         // print(selectedVehicle?.description);
 
                         if (products.isNotEmpty) {
-                          return DropdownButton<ProductModel>(
-                            hint: Text('Seleziona Tipo di Prodotto'),
-                            isExpanded: true,
-                            value: selectedProduct,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 25,
-                            elevation: 16,
-                            style: const TextStyle(
-                              color:  Color(0xFF009648),
-                              fontSize: 20,
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+
                             ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black,
+                            child: DropdownButton<ProductModel>(
+                              hint: Text('Seleziona Tipo di Prodotto'),
+                              isExpanded: true,
+                              value: selectedProduct,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (ProductModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedProduct = value;
+                                });
+                                recordProduct(value!, label!.id);
+                              },
+                              items: products.map<DropdownMenuItem<ProductModel>>(
+                                      (ProductModel product) {
+                                    return DropdownMenuItem<ProductModel>(
+                                      value: product,
+                                      child: Text(
+                                        product.description + ' ' + product.variety,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Colors.black,
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
                             ),
-                            onChanged: (ProductModel? value) {
-                              setState(() {
-                                print(value);
-                                selectedProduct = value;
-                              });
-                            },
-                            items: products.map<DropdownMenuItem<ProductModel>>(
-                                    (ProductModel product) {
-                                  return DropdownMenuItem<ProductModel>(
-                                    value: product,
-                                    child: Text(
-                                      product.description + ' ' + product.variety,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color:  Color(0xFF009648),
-                                          fontFamily: 'Open Sans'),
-                                    ),
-                                  );
-                                }).toList(),
                           );
                         } else {
                           return Text('Nessun Tipo di Prodotto');
@@ -271,7 +315,6 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Data di raccolta',
-                        hintText: 'data messa automaticamente',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -478,40 +521,50 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         // print(selectedVehicle?.description);
 
                         if (boxes.isNotEmpty) {
-                          return DropdownButton<BoxModel>(
-                            hint: Text('Seleziona Tipo di Cassette'),
-                            isExpanded: true,
-                            value: selectedBox,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 25,
-                            elevation: 16,
-                            style: const TextStyle(
-                              color:  Color(0xFF009648),
-                              fontSize: 20,
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+
                             ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black,
+                            child: DropdownButton<BoxModel>(
+                              hint: Text('Seleziona Tipo di Cassette'),
+                              isExpanded: true,
+                              value: selectedBox,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (BoxModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedBox = value;
+                                });
+                              },
+                              items: boxes.map<DropdownMenuItem<BoxModel>>(
+                                  (BoxModel box) {
+                                return DropdownMenuItem<BoxModel>(
+                                  value: box,
+                                  child: Text(
+                                    box.description,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        color:  Color(0xFF009648),
+                                        fontFamily: 'Open Sans'),
+                                  ),
+                                );
+                              }).toList(),
                             ),
-                            onChanged: (BoxModel? value) {
-                              setState(() {
-                                print(value);
-                                selectedBox = value;
-                              });
-                            },
-                            items: boxes.map<DropdownMenuItem<BoxModel>>(
-                                (BoxModel box) {
-                              return DropdownMenuItem<BoxModel>(
-                                value: box,
-                                child: Text(
-                                  box.description,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      color:  Color(0xFF009648),
-                                      fontFamily: 'Open Sans'),
-                                ),
-                              );
-                            }).toList(),
                           );
                         } else {
                           return Text('Nessun Tipo di Cassetta');
@@ -530,40 +583,50 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         // print(selectedVehicle?.description);
 
                         if (customers.isNotEmpty) {
-                          return DropdownButton<CustomerModel>(
-                            hint: Text('Seleziona Proprietario Cassette'),
-                            isExpanded: true,
-                            value: selectedCustomer,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 25,
-                            elevation: 16,
-                            style: const TextStyle(
-                              color:  Color(0xFF009648),
-                              fontSize: 20,
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black),
+
                             ),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.black,
+                            child: DropdownButton<CustomerModel>(
+                              hint: Text('Seleziona Proprietario Cassette'),
+                              isExpanded: true,
+                              value: selectedCustomer,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (CustomerModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedCustomer = value;
+                                });
+                              },
+                              items: customers.map<DropdownMenuItem<CustomerModel>>(
+                                      (CustomerModel customer) {
+                                    return DropdownMenuItem<CustomerModel>(
+                                      value: customer,
+                                      child: Text(
+                                        customer.business_name ,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Color(0xFF009648),
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
                             ),
-                            onChanged: (CustomerModel? value) {
-                              setState(() {
-                                print(value);
-                                selectedCustomer = value;
-                              });
-                            },
-                            items: customers.map<DropdownMenuItem<CustomerModel>>(
-                                    (CustomerModel customer) {
-                                  return DropdownMenuItem<CustomerModel>(
-                                    value: customer,
-                                    child: Text(
-                                      customer.business_name ,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color:  Color(0xFF009648),
-                                          fontFamily: 'Open Sans'),
-                                    ),
-                                  );
-                                }).toList(),
                           );
                         } else {
                           return Text('Nessun Proprietario Cassette');
@@ -582,43 +645,53 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         // print(selectedVehicle?.description);
 
                         if (teams.isNotEmpty) {
-                          return DropdownButton<TeamModel>(
-                            borderRadius: BorderRadius.circular(50),
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
 
-                            hint: Text('Seleziona Squadra'),
-                            isExpanded: true,
-                            value: selectedTeam,
-                            icon: const Icon(Icons.arrow_drop_down),
-                            iconSize: 25,
-                            elevation: 16,
+                            ),
+                            child: DropdownButton<TeamModel>(
+                              borderRadius: BorderRadius.circular(50),
 
-                            style: const TextStyle(
-                              color:  Color(0xFF009648),
-                              fontSize: 20,
+                              hint: Text('Seleziona Squadra'),
+                              isExpanded: true,
+                              value: selectedTeam,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (TeamModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedTeam = value;
+                                });
+                              },
+                              items: teams.map<DropdownMenuItem<TeamModel>>(
+                                      (TeamModel team) {
+                                    return DropdownMenuItem<TeamModel>(
+                                      value: team,
+                                      child: Text(
+                                        team.description,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Color(0xFF009648),
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
                             ),
-                            underline: Container(
-                              height: 1,
-                              color: Colors.black,
-                            ),
-                            onChanged: (TeamModel? value) {
-                              setState(() {
-                                print(value);
-                                selectedTeam = value;
-                              });
-                            },
-                            items: teams.map<DropdownMenuItem<TeamModel>>(
-                                    (TeamModel team) {
-                                  return DropdownMenuItem<TeamModel>(
-                                    value: team,
-                                    child: Text(
-                                      team.description,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          color:  Color(0xFF009648),
-                                          fontFamily: 'Open Sans'),
-                                    ),
-                                  );
-                                }).toList(),
                           );
                         } else {
                           return Text('Nessuna Squadra');

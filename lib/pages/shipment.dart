@@ -1,8 +1,15 @@
+import 'package:agros_app/blocs/get_shipment.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import '../components/flutter_flow_theme.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../theme/color.dart';
 import 'detail_shipment.dart';
 import 'new_shipment.dart';
 
@@ -14,6 +21,18 @@ class SpedizioneWidget extends StatefulWidget {
 
 class _SpedizioneWidgetState extends State<SpedizioneWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocRefreshEvent());
+      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocGetEvent());
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +94,21 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
+                  ),BlocBuilder<GetShipmentBloc, GetShipmentBlocState>(
+    builder: (context, state) {
+      if (state is GetShipmentBlocStateLoading)
+        return Center(child: CircularProgressIndicator());
+      else {
+        final shipments = (state as GetShipmentBlocStateLoaded).shipments;
+        if (shipments.isNotEmpty) {
+          return ListView.builder(
+              scrollDirection: Axis.vertical,
+              padding: EdgeInsets.zero,
+              itemCount: shipments.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final shipment = shipments[index];
+                return
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                     child: InkWell(
@@ -102,7 +135,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                 padding:
                                 EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
                                 child: Text(
-                                  'Dettagli spedizione  #3',
+                                  'Dettagli spedizione  #' + shipment.progressive,
                                   style: FlutterFlowTheme
                                       .bodyText1
                                       .override(
@@ -116,7 +149,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                 color: Color(0xFF6C6C6C),
                               ),
                               Text(
-                                'ID spedizione: 321785\nTrasportatore: BRT\nCodice cliente: #234\nData di spedizione: 02/02/22',
+                                'ID spedizione:'+ shipment.id + '\nTrasportatore:'+ shipment.carrier + '\nCodice cliente:'+ shipment.customer.business_name + '\nData di spedizione:'+ shipment.date ,
                                 style: FlutterFlowTheme.bodyText1,
                               ),
                               Padding(
@@ -154,7 +187,41 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                         ),
                       ),
                     ),
+                  );
+              });
+        } else {
+          return Container(
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      FontAwesomeIcons.folderOpen,
+                      color: firstColor,
+                      size: 50,
+                    ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: AutoSizeText(
+                      'NESSUN ELEMENTO',
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+      }
+    }),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                     child: InkWell(

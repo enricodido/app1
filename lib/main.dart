@@ -1,3 +1,4 @@
+import 'package:agros_app/blocs/get_shipment.dart';
 import 'package:agros_app/pages/detail_new_shipment.dart';
 import 'package:agros_app/pages/detail_shipment.dart';
 import 'package:agros_app/pages/labeling.dart';
@@ -55,6 +56,9 @@ void main() {
         ),
         BlocProvider(
           create: (_) => GetCustomerBloc(GetCustomerBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetShipmentBloc(GetShipmentBlocStateLoading()),
         ),
       ],
       child: MyApp(),
