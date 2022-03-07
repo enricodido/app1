@@ -25,15 +25,15 @@ class Label {
   });
 
   final String id;
-  final String batch;
-  final String progressive;
+  final String? batch;
+  final String? progressive;
   final String date;
-  final String total_weight;
+  final String? total_weight;
   final String weight;
   final String number;
   final String note;
-  final ProductModel product;
-  final TeamModel team;
+  final ProductModel? product;
+  final TeamModel? team;
  // final PalletModel pallet;
  // final BoxModel box;
  // final CustomerModel customer;
@@ -43,15 +43,15 @@ class Label {
   factory Label.fromData(Map<String, dynamic> data) {
 
     final String id = data['id'].toString();
-    final String batch = data['batch'].toString();
-    final String progressive = data['progressive'].toString();
+    final String? batch = data['batch'].toString();
+    final String? progressive = data['progressive'].toString();
     final String date = data['date'].toString();
-    final String total_weight = data['total_weight'].toString();
+    final String? total_weight = data['total_weight'].toString();
     final String weight = data['weight'].toString();
     final String number = data['number'].toString();
     final String note = data['note'].toString();
-    final ProductModel product = ProductModel.fromData(data['product']);
-    final TeamModel team = TeamModel.fromData(data['team']);
+    final ProductModel? product = ProductModel.fromData(data['product']);
+    final TeamModel? team = TeamModel.fromData(data['team']);
   //  final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
   //  final BoxModel box = BoxModel.fromData(data['boxes_tipe']);
   //  final CustomerModel customer = CustomerModel.fromData(data['customer']);

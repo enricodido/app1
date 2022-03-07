@@ -22,17 +22,16 @@ class SpedizioneWidget extends StatefulWidget {
 class _SpedizioneWidgetState extends State<SpedizioneWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   @override
   void initState() {
     super.initState();
 
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
-      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocRefreshEvent());
+      BlocProvider.of<GetShipmentBloc>(context)
+          .add(GetShipmentBlocRefreshEvent());
       BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocGetEvent());
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -94,213 +93,150 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),BlocBuilder<GetShipmentBloc, GetShipmentBlocState>(
-    builder: (context, state) {
-      if (state is GetShipmentBlocStateLoading)
-        return Center(child: CircularProgressIndicator());
-      else {
-        final shipments = (state as GetShipmentBlocStateLoaded).shipments;
-        if (shipments.isNotEmpty) {
-          return ListView.builder(
-              scrollDirection: Axis.vertical,
-              padding: EdgeInsets.zero,
-              itemCount: shipments.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                final shipment = shipments[index];
-                return
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DettagliSpedizioneWidget(),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Color(0xFFF5F5F5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
-                                child: Text(
-                                  'Dettagli spedizione  #' + shipment.progressive,
-                                  style: FlutterFlowTheme
-                                      .bodyText1
-                                      .override(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                  ),
+                  BlocBuilder<GetShipmentBloc, GetShipmentBlocState>(
+                      builder: (context, state) {
+                    if (state is GetShipmentBlocStateLoading)
+                      return Center(child: CircularProgressIndicator());
+                    else {
+                      final shipments =
+                          (state as GetShipmentBlocStateLoaded).shipments;
+                      if (shipments.isNotEmpty) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.zero,
+                            itemCount: shipments.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final shipment = shipments[index];
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: InkWell(
+                                  onTap: () async {
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DettagliSpedizioneWidget(),
+                                      ),
+                                    );
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    color: Color(0xFFF5F5F5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0, 0, 0, 10),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 10, 0, 5),
+                                            child: Text(
+                                              'Dettagli spedizione  #' +
+                                                  shipment.progressive,
+                                              style: FlutterFlowTheme.bodyText1
+                                                  .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(
+                                            color: Color(0xFF6C6C6C),
+                                          ),
+                                          Text(
+                                            'ID spedizione:' +
+                                                shipment.id +
+                                                '\nTrasportatore:' +
+                                                shipment.carrier +
+                                                '\nCodice cliente:' +
+                                                shipment
+                                                    .customer.business_name +
+                                                '\nData di spedizione:' +
+                                                shipment.date,
+                                            style: FlutterFlowTheme.bodyText1,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    20, 10, 20, 0),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 20,
+                                                  height: 20,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xFF009648),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(10, 0, 0, 0),
+                                                  child: Text(
+                                                    'Carico spedito',
+                                                    style: FlutterFlowTheme
+                                                        .bodyText1
+                                                        .override(
+                                                      fontFamily: 'Poppins',
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Divider(
-                                color: Color(0xFF6C6C6C),
-                              ),
-                              Text(
-                                'ID spedizione:'+ shipment.id + '\nTrasportatore:'+ shipment.carrier + '\nCodice cliente:'+ shipment.customer.business_name + '\nData di spedizione:'+ shipment.date ,
-                                style: FlutterFlowTheme.bodyText1,
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF009648),
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          10, 0, 0, 0),
-                                      child: Text(
-                                        'Carico spedito',
-                                        style: FlutterFlowTheme
-                                            .bodyText1
-                                            .override(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-              });
-        } else {
-          return Container(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Icon(
-                      FontAwesomeIcons.folderOpen,
-                      color: firstColor,
-                      size: 50,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: AutoSizeText(
-                      'NESSUN ELEMENTO',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      }
-    }),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
-                    child: InkWell(
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DettagliSpedizioneWidget(),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        color: Color(0xFFF5F5F5),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Padding(
-                                padding:
-                                EdgeInsetsDirectional.fromSTEB(0, 10, 0, 5),
-                                child: Text(
-                                  'Dettagli spedizione  #4',
-                                  style: FlutterFlowTheme
-                                      .bodyText1
-                                      .override(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
+                              );
+                            });
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.folderOpen,
+                                    color: firstColor,
+                                    size: 50,
                                   ),
                                 ),
-                              ),
-                              Divider(
-                                color: Color(0xFF6C6C6C),
-                              ),
-                              Text(
-                                'ID spedizione: 34232\nTrasportatore: BRT\nCodice cliente: #235\nData di spedizione: 02/02/22',
-                                style: FlutterFlowTheme.bodyText1,
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(
-                                    20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFFFA900),
-                                        shape: BoxShape.circle,
-                                      ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: AutoSizeText(
+                                    'NESSUN ELEMENTO',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          10, 0, 0, 0),
-                                      child: Text(
-                                        'Carico in corso',
-                                        style: FlutterFlowTheme
-                                            .bodyText1
-                                            .override(
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        );
+                      }
+                    }
+                  }),
+
                 ],
               ),
             ),

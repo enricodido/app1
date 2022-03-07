@@ -3,6 +3,7 @@ import 'package:agros_app/model/boxes_type.dart';
 import 'package:agros_app/model/pallet_type.dart';
 import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
+import 'package:agros_app/pages/home.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ import '../blocs/get_label.dart';
 import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
+import '../components/customDialog.dart';
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
@@ -23,14 +25,10 @@ import '../main.dart';
 import '../model/customers.dart';
 import '../model/label.dart';
 import '../repositories/repository.dart';
+import '../theme/color.dart';
 import 'labeling.dart';
 
-   /* class NuovaEtichettaturaWidgetArg {
-      NuovaEtichettaturaWidgetArg({
-        required this.label,
-      });
-      final Label label;
-    }*/
+
 class NuovaEtichettaturaWidget extends StatefulWidget {
   static const ROUTE_NAME = '/new_labeling';
   @override
@@ -41,12 +39,12 @@ class NuovaEtichettaturaWidget extends StatefulWidget {
 class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
 
 
-  TextEditingController textController1 = TextEditingController();
-  TextEditingController textController2 = TextEditingController();
-  TextEditingController textController3 = TextEditingController();
-  TextEditingController textController4 = TextEditingController();
-  TextEditingController textController5 = TextEditingController();
-  TextEditingController textController6 = TextEditingController();
+  TextEditingController palletController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController batchController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
 
 
   BoxModel? selectedBox;
@@ -54,15 +52,10 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
   PalletModel? selectedPallet;
   ProductModel? selectedProduct;
   CustomerModel? selectedCustomer;
-  Label? label;
+  late Label label;
 
-  String textController1error = 'Richiesta';
-  String textController2error = 'Richiesta';
-  String textController3error = 'Richiesta';
-  String textController4error = 'Richiesta';
-  String textController5error = 'Richiesta';
-  String textController6error = 'Richiesta';
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = false;
+  final scaffoldKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -84,16 +77,99 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
 
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
-      textController2 = TextEditingController(text: formattedDate);
+      dateController = TextEditingController(text: formattedDate);
     });
 
   }
-  void recordProduct(ProductModel product, String label_id) {
-    getIt
-        .get<Repository>()
-        .labelRepository!
-        .recordProduct(context, product.id.toString(), label.toString());
+  void onsubmit() async {
+
+    String date = dateController.text.trim();
+    String batch = batchController.text.trim();
+    String weight = weightController.text.trim();
+    String number = numberController.text.trim();
+    String note = noteController.text.trim();
+    String progressive = palletController.text.trim();
+
+    print(date);
+    print(batch);
+    print(weight);
+    print(number);
+    print(note);
+    print(progressive);
+    print(selectedProduct!.id);
+    print(selectedPallet!.id);
+    print(selectedCustomer!.id);
+    print(selectedTeam!.id);
+    print(selectedBox!.id);
+    if(date.isNotEmpty && batch.isNotEmpty) {
+
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final data = await getIt.get<Repository>().labelRepository!.record(
+          context,
+          selectedProduct!.id.toString(),
+          selectedPallet!.id.toString() ,
+          date.toString()  ,
+          batch.toString() ,
+          weight.toString() ,
+          number.toString(),
+          selectedCustomer!.id.toString(),
+          note.toString() ,
+          selectedBox!.id.toString(),
+          selectedTeam!.id.toString(),
+          );
+        if(data) {
+
+          Navigator.pushNamed(
+              context, EtichettaturaWidget.ROUTE_NAME);
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.SUCCESS,
+            msg:  'Bancale caricato con Successo',
+          );
+          setState(() {
+            isLoading = false;
+          });
+
+
+
+        }
+
+      } catch (error) {
+        print(error);
+        showCustomDialog(
+          context: context,
+          type: CustomDialog.WARNING,
+          msg: 'Errore!',
+        );
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+
+    } else {
+      showCustomDialog(
+        context: context,
+        type: CustomDialog.ERROR,
+        msg: 'Dati mancanti!',
+      );
+    }
+
+
+
   }
+
+
+
+
+
+
+
+
 
 
   @override
@@ -103,12 +179,26 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),
       backgroundColor: Color(0xFFF5F5F5),
-      body: SafeArea(
+      body:(isLoading) ? Container(
+        width: double.infinity,
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                child: CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Color(0xFF80BC01)),
+                ),
+              )
+            ]
+        ),
+      ) : SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Container(
@@ -136,12 +226,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController1',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController1,
+                      controller: palletController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Progressivo Pedana  ',
@@ -159,23 +244,12 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController1.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController1.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
+
                     ),
                   ),
                   BlocBuilder<GetPalletBloc, GetPalletBlocState>(
@@ -280,7 +354,6 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                                   print(value);
                                   selectedProduct = value;
                                 });
-                                recordProduct(value!, label!.id);
                               },
                               items: products.map<DropdownMenuItem<ProductModel>>(
                                       (ProductModel product) {
@@ -306,12 +379,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController2',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController2,
+                      controller: dateController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Data di raccolta',
@@ -329,34 +397,19 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController2.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController2.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
+
                     ),
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController3',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController3,
+
+                      controller: batchController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'n° lotto',
@@ -375,38 +428,27 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController3.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController3.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Inserire Lotto';
+                        }
+                        return null;
+                      },
                     ),
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController4',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController4,
+                      controller: weightController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Peso',
-                        hintText: 'Esempio: 150',
+                        labelText: 'Peso in Kg',
+                        hintText: 'in Kg',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -421,57 +463,26 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController4.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController4.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
+                      /*validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Inserire Peso';
+                        }
+                        return null;
+                      },*/
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                    child: FlutterFlowDropDown(
-                      initialOption: 'Seleziona',
-                      options: ['KG', 'Tonnellate'].toList(),
-                      onChanged: (val) => setState(() => val),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      textStyle: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF303030),
-                        fontSize: 16,
-                      ),
-                      fillColor: Colors.white,
-                      elevation: 2,
-                      borderColor: Color(0xFF6C6C6C),
-                      borderWidth: 0,
-                      borderRadius: 15,
-                      margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
-                      hidesUnderline: true,
-                    ),
-                  ),
+
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController5',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController5,
+
+                      controller: numberController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Numero casse',
@@ -490,23 +501,17 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController5.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController5.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Inserire Numero Casse';
+                        }
+                        return null;
+                      },
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -702,12 +707,8 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController6',
-                        Duration(milliseconds: 2000),
-                        () => setState(() {}),
-                      ),
-                      controller: textController6,
+
+                      controller: noteController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Note (facoltativo)',
@@ -725,25 +726,12 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController6.text.isNotEmpty
-                            ? InkWell(
-                                onTap: () => setState(
-                                  () => textController6.clear(),
-                                ),
-                                child: Icon(
-                                  Icons.clear,
-                                  color: Color(0xFF757575),
-                                  size: 22,
-                                ),
-                              )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
                       maxLines: 10,
-                      keyboardType: TextInputType.number,
                     ),
                   ),
                   Padding(
@@ -774,13 +762,8 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                           ),
                         ),
                         FFButtonWidget(
-                          onPressed: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EtichettaturaWidget(),
-                              ),
-                            );
+                          onPressed: () {
+                            onsubmit();
                           },
                           text: 'Salva',
                           options: FFButtonOptions(

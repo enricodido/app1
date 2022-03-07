@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:agros_app/repositories/repository.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/cupertino.dart';
 
+import '../components/customDialog.dart';
 import '../model/label.dart';
 
 
@@ -12,7 +13,7 @@ class LabelRepository {
 
   Future<List<Label>> get() async {
     final response = await repository.http!.get(
-      url: 'get/labeling_and_loadings', );
+      url: 'get/labeling_and_loadings' );
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {
@@ -39,19 +40,41 @@ class LabelRepository {
     throw RequestError(data);
   }
 
-  Future<String?> recordProduct(context, String product_id, String label_id) async {
-    final response = await repository.http!.post(
-      url: 'record/product/labeling_and_loadings',  bodyParameters: {
+  Future<bool> record(
+      context,
+     String product_id ,
+     String pallet_type_id,
+     String date,
+     String batch,
+     String weight,
+     String numbers,
+     String property_id,
+      String note,
+     String boxes_type_id,
+     String team_id,
+
+  ) async {
+    final response =
+    await repository.http!.post(
+        url: 'record/labeling_and_loadings', bodyParameters: {
       'product_id': product_id,
-      'labeling_and_loading_id': label_id,
+      'pallet_type_id': pallet_type_id,
+      'date': date,
+      'batch': batch,
+      'total_weight': weight,
+      'property_id': property_id,
+      'boxes_type_id': boxes_type_id,
+      'team_id': team_id,
+      'numbers': numbers,
+      'note': note,
     });
     final data = json.decode(response.body);
-
     if (response.statusCode == 200) {
 
-      return data['labeling_and_loading_id'].toString();
-    }
+      return true;
+    } else {
 
-    throw RequestError(data);
+      return false;
+    }
   }
 }

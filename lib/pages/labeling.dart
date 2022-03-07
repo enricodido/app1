@@ -1,9 +1,11 @@
+import 'package:agros_app/components/flutter_flow_util.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../blocs/get_label.dart';
 import '../components/flutter_flow_theme.dart';
@@ -36,12 +38,6 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
     getIt.get<Repository>().labelRepository!.create();
       Navigator.pushNamed(context, NuovaEtichettaturaWidget.ROUTE_NAME);
 
-  }
-
-  void logout(BuildContext context) {
-    getIt.get<Repository>().sessionRepository!.logout();
-    Navigator.pushNamedAndRemoveUntil(
-        context, LoginPageWidget.ROUTE_NAME, ModalRoute.withName('/'));
   }
 
   @override
@@ -127,26 +123,29 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
                                     color: Color(0xFFF5F5F5),
                                     shape: RoundedRectangleBorder(
+
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 0, 0, 10),
+                                          10, 10, 10, 10),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 10, 0, 5),
                                             child: Text(
-                                              'Dettagli etichettatura ' + label.progressive,
+                                              'Etichettatura ' + label.progressive! +  ' - ' + label.date ,
 
                                               style: FlutterFlowTheme.bodyText1
                                                   .override(
                                                 fontFamily: 'Poppins',
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
+                                                color: Colors.green,
                                               ),
                                             ),
                                           ),
@@ -154,10 +153,10 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                             color: Color(0xFF6C6C6C),
                                           ),
                                           Text(
-                                            'Lotto: ' +  label.batch + '\n'
-                                            'Prodotto: ' + label.product.description + '\n'
-                                            'Peso: ' + label.total_weight + ' kg\n'
-                                            'Squadra di raccolta: ' + label.team.description,
+                                            'Lotto: ' +  label.batch! + '\n'
+                                            'Prodotto: ' + label.product!.description + '\n'
+                                            'Peso: ' + label.total_weight! + ' kg\n'
+                                            'Squadra di raccolta: ' + label.team!.description,
                                             style: FlutterFlowTheme.bodyText1,
                                           ),
                                         ],

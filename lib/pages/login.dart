@@ -85,7 +85,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: Form(
-            key: scaffoldKey,
             autovalidateMode: AutovalidateMode.disabled,
             child: Container(
               width: MediaQuery.of(context).size.width,

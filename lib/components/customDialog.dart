@@ -30,6 +30,12 @@ void showCustomDialog({
       );
       break;
 
+    case CustomDialog.SUCCESS:
+      alert = CustomDialog.success(
+        message: msg,
+      );
+      break;
+
     default:
       alert = CustomDialog.error(
         message: msg,
@@ -47,6 +53,7 @@ class CustomDialog extends StatelessWidget {
   static const ERROR = 0;
   static const WARNING = 1;
   static const INFO = 2;
+  static const SUCCESS = 3;
 
   CustomDialog({
     required this.title,
@@ -75,6 +82,17 @@ class CustomDialog extends StatelessWidget {
       title: 'ATTENZIONE',
       color: Colors.orange,
       msg: message,
+    );
+  }
+
+  factory CustomDialog.success({
+    required String message,
+    String? headerTitle,
+  }) {
+    return CustomDialog(
+        title: 'Successo',
+        color: Colors.green,
+        msg: message
     );
   }
 
