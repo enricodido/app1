@@ -9,6 +9,7 @@ class Shipment {
     required this.customer,
     required this.note,
     required this.vehicle,
+    required this.status,
 
 
   });
@@ -19,6 +20,7 @@ class Shipment {
   final String carrier;
   final String vehicle;
   final String note;
+  final String status;
   final CustomerModel customer;
 
 
@@ -32,6 +34,7 @@ class Shipment {
     final String date = data['date'].toString();
     final String vehicle = data['vehicle'].toString();
     final String note = data['note'].toString();
+    final String status = data['status'].toString();
     final CustomerModel customer = CustomerModel.fromData(data['customer']);
     //  final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
     //  final BoxModel box = BoxModel.fromData(data['boxes_tipe']);
@@ -47,6 +50,7 @@ class Shipment {
       carrier: carrier,
       customer: customer,
       vehicle: vehicle,
+      status: status,
       //  pallet: pallet,
       //  box: box,
       //  customer: customer,

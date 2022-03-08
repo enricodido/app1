@@ -40,7 +40,6 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
       appBar: AppBar(
         backgroundColor: Color(0xFF018AAA),
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),
@@ -54,7 +53,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
             ),
           );
         },
-        backgroundColor: Color(0xFF018AAA),
+        backgroundColor: Colors.white,
         icon: Icon(
           Icons.add,
           color: Colors.white,
@@ -65,7 +64,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
           'Nuova spedizione',
           style: FlutterFlowTheme.bodyText1.override(
             fontFamily: 'Poppins',
-            color: Colors.white,
+            color: Colors.green,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -171,6 +170,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
+                                                // IF STATEMENT STATO CARICO
                                                 Container(
                                                   width: 20,
                                                   height: 20,
@@ -235,8 +235,8 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                         );
                       }
                     }
-                  }),
-
+                  }
+                  ),
                 ],
               ),
             ),

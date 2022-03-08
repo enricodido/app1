@@ -1,9 +1,7 @@
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DettagliSpedizioneWidget extends StatefulWidget {
   static const ROUTE_NAME = '/shipment_detail';
@@ -14,12 +12,12 @@ class DettagliSpedizioneWidget extends StatefulWidget {
 }
 
 class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
-  late String dropDownValue1;
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  late String dropDownValue2;
-  late TextEditingController textController3;
-  late TextEditingController textController4;
+  String? dropDownValue1;
+  TextEditingController textController1 = TextEditingController();
+  TextEditingController textController2 = TextEditingController();
+  String? dropDownValue2;
+  TextEditingController textController3 = TextEditingController();
+  TextEditingController textController4 = TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -40,7 +38,6 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.secondaryColor,
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),
@@ -102,9 +99,9 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue1 ??= 'Trasportatore',
+                      initialOption: dropDownValue1,
                       options: ['Trasportatore 1', 'trasportatore 2'].toList(),
-                      onChanged: (val) => setState(() => dropDownValue1 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:
@@ -154,9 +151,9 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue2 ??= 'Codice cliente',
+                      initialOption: dropDownValue2 ,
                       options: ['Cliente 1', 'Cliente 2'].toList(),
-                      onChanged: (val) => setState(() => dropDownValue2 = val),
+                      onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
                       height: 50,
                       textStyle:

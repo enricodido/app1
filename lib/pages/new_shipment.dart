@@ -1,11 +1,8 @@
 import 'package:easy_debounce/easy_debounce.dart';
-
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'detail_new_shipment.dart';
 
 class NuovaSpedizioneWidget extends StatefulWidget {
@@ -16,10 +13,10 @@ class NuovaSpedizioneWidget extends StatefulWidget {
 
 class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
 
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  late TextEditingController textController3;
-  late TextEditingController textController4;
+  TextEditingController textController1 = TextEditingController();
+  TextEditingController textController2 = TextEditingController();
+  TextEditingController textController3 = TextEditingController();
+  TextEditingController textController4 = TextEditingController();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -40,7 +37,6 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.secondaryColor,
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),
@@ -235,18 +231,6 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController3.text.isNotEmpty
-                            ? InkWell(
-                          onTap: () => setState(
-                                () => textController3.clear(),
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: Color(0xFF757575),
-                            size: 22,
-                          ),
-                        )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
@@ -281,18 +265,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController4.text.isNotEmpty
-                            ? InkWell(
-                          onTap: () => setState(
-                                () => textController4.clear(),
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: Color(0xFF757575),
-                            size: 22,
-                          ),
-                        )
-                            : null,
+
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
@@ -310,7 +283,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            Navigator.pop(context);
+                            Navigator.pushNamed(context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
                           },
                           text: 'Chiudi',
                           options: FFButtonOptions(

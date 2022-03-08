@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:agros_app/repositories/repository.dart';
-import '../model/label.dart';
 import '../model/shipment.dart';
 
 

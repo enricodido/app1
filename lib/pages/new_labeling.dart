@@ -14,18 +14,13 @@ import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
 import '../components/customDialog.dart';
-import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../main.dart';
 import '../model/customers.dart';
 import '../model/label.dart';
 import '../repositories/repository.dart';
-import '../theme/color.dart';
 import 'labeling.dart';
 
 
