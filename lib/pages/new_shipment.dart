@@ -1,8 +1,19 @@
+import 'package:agros_app/pages/shipment.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import '../blocs/get_carrier.dart';
+import '../blocs/get_customer.dart';
+import '../components/customDialog.dart';
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
+import '../main.dart';
+import '../model/carrier.dart';
+import '../model/customers.dart';
+import '../repositories/repository.dart';
 import 'detail_new_shipment.dart';
 
 class NuovaSpedizioneWidget extends StatefulWidget {
@@ -13,21 +24,88 @@ class NuovaSpedizioneWidget extends StatefulWidget {
 
 class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
 
-  TextEditingController textController1 = TextEditingController();
-  TextEditingController textController2 = TextEditingController();
-  TextEditingController textController3 = TextEditingController();
-  TextEditingController textController4 = TextEditingController();
+  TextEditingController progressiveController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController vehicleController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
+  CustomerModel? selectedCustomer;
+  CarrierModel? selectedCarrier;
+  bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController(text: 'Calcolato in automatico');
-    textController2 = TextEditingController(text: 'AA000AA');
-    textController3 = TextEditingController(
-        text: '02/02/2022 (mettere calendario da oggi in poi)');
-    textController4 =
-        TextEditingController(text: 'Questo lotto ha questo dettaglio...');
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd-MM-yyyy').format(now);
+    SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
+      BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
+
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
+      dateController = TextEditingController(text: formattedDate);
+    });
+
+  }
+
+  void onsubmit() async {
+    String date = dateController.text.trim();
+    String batch = progressiveController.text.trim();
+    String vehicle = vehicleController.text.trim();
+    String note = noteController.text.trim();
+
+
+
+    if (date.isNotEmpty && batch.isNotEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final data = await getIt
+            .get<Repository>()
+            .shipmentRepository!
+            .record(
+          context,
+          selectedCarrier!.id.toString(),
+          selectedCustomer!.id.toString(),
+          date.toString(),
+          vehicle.toString(),
+          note.toString(),
+
+        );
+        if (data) {
+          Navigator.pushNamed(
+              context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.SUCCESS,
+            msg: 'Bancale caricato con Successo',
+          );
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (error) {
+        print(error);
+        showCustomDialog(
+          context: context,
+          type: CustomDialog.WARNING,
+          msg: 'Errore!',
+        );
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      showCustomDialog(
+        context: context,
+        type: CustomDialog.ERROR,
+        msg: 'Dati mancanti!',
+      );
+    }
   }
 
   @override
@@ -69,16 +147,10 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController1',
-                        Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                      ),
-                      controller: textController1,
+                      controller: progressiveController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Progressivo Spedizione',
-                        hintText: 'Calcolato in automatico',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -93,18 +165,6 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController1.text.isNotEmpty
-                            ? InkWell(
-                          onTap: () => setState(
-                                () => textController1.clear(),
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: Color(0xFF757575),
-                            size: 22,
-                          ),
-                        )
-                            : null,
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
@@ -112,42 +172,75 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                    child: FlutterFlowDropDown(
-                      initialOption: '',
-                      options: ['Trasportatore 1', 'trasportatore 2'].toList(),
-                      onChanged: (val) => setState(() => val),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      textStyle:
-                      FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF303030),
-                        fontSize: 16,
-                      ),
-                      fillColor: Colors.white,
-                      elevation: 2,
-                      borderColor: Color(0xFF6C6C6C),
-                      borderWidth: 0,
-                      borderRadius: 15,
-                      margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
-                      hidesUnderline: true,
-                    ),
+                  BlocBuilder<GetCarrierBloc, GetCarrierBlocState>(
+                    builder: (context, state) {
+                      if (state is GetCarrierBlocStateLoading)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        List<CarrierModel> carriers =
+                            (state as GetCarrierBlocStateLoaded).carriers;
+                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
+                        // print(selectedVehicle?.description);
+
+                        if (carriers.isNotEmpty) {
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+
+                            ),
+                            child: DropdownButton<CarrierModel>(
+                              hint: Text('Seleziona Tipo di Bancale'),
+                              isExpanded: true,
+                              value: selectedCarrier,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (CarrierModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedCarrier = value;
+                                });
+                              },
+                              items: carriers.map<DropdownMenuItem<CarrierModel>>(
+                                      (CarrierModel carrier) {
+                                    return DropdownMenuItem<CarrierModel>(
+                                      value: carrier,
+                                      child: Text(
+                                        carrier.description,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Color(0xFF009648),
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          );
+                        } else {
+                          return Text('Nessun Trasportatore');
+                        }
+                      }
+                    },
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController2',
-                        Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                      ),
-                      controller: textController2,
+                      controller: vehicleController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Targa (opzionale)',
-                        hintText: 'AA000AA',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -162,18 +255,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController2.text.isNotEmpty
-                            ? InkWell(
-                          onTap: () => setState(
-                                () => textController2.clear(),
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: Color(0xFF757575),
-                            size: 22,
-                          ),
-                        )
-                            : null,
+
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
@@ -181,42 +263,76 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                    child: FlutterFlowDropDown(
-                      initialOption: 'Codice cliente',
-                      options: ['Cliente 1', 'Cliente 2'].toList(),
-                      onChanged: (val) => setState(() =>  val),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      textStyle:
-                      FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF303030),
-                        fontSize: 16,
-                      ),
-                      fillColor: Colors.white,
-                      elevation: 2,
-                      borderColor: Color(0xFF6C6C6C),
-                      borderWidth: 0,
-                      borderRadius: 15,
-                      margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
-                      hidesUnderline: true,
-                    ),
+                  BlocBuilder<GetCustomerBloc, GetCustomerBlocState>(
+                    builder: (context, state) {
+                      if (state is GetCustomerBlocStateLoading)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        List<CustomerModel> customers =
+                            (state as GetCustomerBlocStateLoaded).customers;
+                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
+                        // print(selectedVehicle?.description);
+
+                        if (customers.isNotEmpty) {
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.black),
+
+                            ),
+                            child: DropdownButton<CustomerModel>(
+                              hint: Text('Seleziona Cliente'),
+                              isExpanded: true,
+                              value: selectedCustomer,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Color(0xFF009648),
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (CustomerModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedCustomer = value;
+                                });
+                              },
+                              items: customers.map<DropdownMenuItem<CustomerModel>>(
+                                      (CustomerModel customer) {
+                                    return DropdownMenuItem<CustomerModel>(
+                                      value: customer,
+                                      child: Text(
+                                        customer.business_name ,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Color(0xFF009648),
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          );
+                        } else {
+                          return Text('Nessun Cliente');
+                        }
+                      }
+                    },
                   ),
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController3',
-                        Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                      ),
-                      controller: textController3,
+
+                      controller: dateController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Data di spedizione(mettere calendario)',
-                        hintText: '02/02/22',
+                        labelText: 'Data di spedizione',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -242,12 +358,8 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController4',
-                        Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                      ),
-                      controller: textController4,
+
+                      controller: noteController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Note (facoltativo)',
@@ -272,7 +384,6 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                         fontSize: 16,
                       ),
                       maxLines: 10,
-                      keyboardType: TextInputType.number,
                     ),
                   ),
                   Padding(
@@ -283,7 +394,6 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                       children: [
                         FFButtonWidget(
                           onPressed: () async {
-                            Navigator.pushNamed(context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
                           },
                           text: 'Chiudi',
                           options: FFButtonOptions(
@@ -304,39 +414,9 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                           ),
                         ),
                         FFButtonWidget(
-                          onPressed: () async {
-                            await showDialog(
-                              context: context,
-                              builder: (alertDialogContext) {
-                                return AlertDialog(
-                                  title: Text(
-                                      'Confermare le informazioni della nuova spedizione?'),
-                                  content: Text(
-                                      'Una volta confermate queste info, non saranno più modificabili'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.pop(alertDialogContext),
-                                      child: Text('Non ancora'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        Navigator.pop(alertDialogContext);
-                                        await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DettaglioNuovaSpedizioneWidget(),
-                                          ),
-                                        );
-                                        ;
-                                      },
-                                      child: Text('Conferma'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                          onPressed: () {
+                            Navigator.pushNamed(context, SpedizioneWidget.ROUTE_NAME);
+                            onsubmit();
                           },
                           text: 'Salva',
                           options: FFButtonOptions(

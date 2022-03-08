@@ -19,6 +19,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:agros_app/pages/home.dart';
 
 import 'blocs/get_boxes_type.dart';
+import 'blocs/get_carrier.dart';
 import 'blocs/get_customer.dart';
 import 'blocs/get_label.dart';
 import 'blocs/get_pallet.dart';
@@ -59,6 +60,9 @@ void main() {
         ),
         BlocProvider(
           create: (_) => GetShipmentBloc(GetShipmentBlocStateLoading()),
+        ),
+        BlocProvider(
+          create: (_) => GetCarrierBloc(GetCarrierBlocStateLoading()),
         ),
       ],
       child: MyApp(),

@@ -11,6 +11,7 @@ import 'package:agros_app/repositories/team.dart';
 import 'package:agros_app/repositories/user.dart';
 import 'package:http/http.dart' as http;
 
+import 'carrier.dart';
 import 'label.dart';
 
 
@@ -29,6 +30,7 @@ class Repository {
     palletRepository = PalletTypeRepository(this);
     productRepository = ProductRepository(this);
     shipmentRepository = ShipmentRepository(this);
+    carrierRepository = CarrierRepository(this);
   }
 
   HttpClient? http;
@@ -41,6 +43,7 @@ class Repository {
   PalletTypeRepository? palletRepository;
   ProductRepository? productRepository;
   ShipmentRepository? shipmentRepository;
+  CarrierRepository? carrierRepository;
 }
 
 class HttpClient {

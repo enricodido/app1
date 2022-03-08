@@ -129,14 +129,15 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                     ),
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 0, 0, 10),
+                                          10, 10, 10, 10),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    0, 10, 0, 5),
+                                                    10, 10, 10, 10),
                                             child: Text(
                                               'Dettagli spedizione  #' +
                                                   shipment.progressive,
@@ -152,14 +153,14 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                             color: Color(0xFF6C6C6C),
                                           ),
                                           Text(
-                                            'ID spedizione:' +
+                                            'ID spedizione: ' +
                                                 shipment.id +
-                                                '\nTrasportatore:' +
+                                                '\nTrasportatore: ' +
                                                 shipment.carrier +
-                                                '\nCodice cliente:' +
+                                                '\nCliente: ' +
                                                 shipment
                                                     .customer.business_name +
-                                                '\nData di spedizione:' +
+                                                '\nData spedizione: ' +
                                                 shipment.date,
                                             style: FlutterFlowTheme.bodyText1,
                                           ),
@@ -170,7 +171,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               children: [
-                                                // IF STATEMENT STATO CARICO
+                                               // switch(shipment.status) case open....
                                                 Container(
                                                   width: 20,
                                                   height: 20,
