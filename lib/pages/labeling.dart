@@ -80,22 +80,22 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
             decoration: BoxDecoration(
               color: Colors.white,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
-                    child: Text(
-                      'Etichettatura',
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
+                  child: Text(
+                    'Etichettatura',
+                    style: FlutterFlowTheme.bodyText1.override(
+                      fontFamily: 'Poppins',
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  BlocBuilder<GetLabelBloc, GetLabelBlocState>(
+                ),
+                Expanded(
+                  child: BlocBuilder<GetLabelBloc, GetLabelBlocState>(
                       builder: (context, state) {
                     if (state is GetLabelBlocStateLoading)
                       return Center(child: CircularProgressIndicator());
@@ -123,7 +123,7 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
                                     color: Color(0xFFF5F5F5),
                                     shape: RoundedRectangleBorder(
-
+                                      side: BorderSide(color: Colors.black38, width: 2.0,),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Padding(
@@ -138,13 +138,13 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 10, 0, 5),
                                             child: Text(
-                                              'Etichettatura ' + label.progressive! +  ' - ' + label.date ,
+                                              'Etichettatura ' + label.progressive! +  '  ' + label.date  ,
 
                                               style: FlutterFlowTheme.bodyText1
                                                   .override(
                                                 fontFamily: 'Poppins',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
                                                 color: Colors.green,
                                               ),
                                             ),
@@ -154,7 +154,7 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                           ),
                                           Text(
                                             'Lotto: ' +  label.batch! + '\n'
-                                            'Prodotto: ' + label.product!.description + '\n'
+                                            'Prodotto: ' + label.product!.description + ' ' + label.product!.variety +'\n'
                                             'Peso: ' + label.total_weight! + ' kg\n'
                                             'Squadra di raccolta: ' + label.team!.description,
                                             style: FlutterFlowTheme.bodyText1,
@@ -198,9 +198,9 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                         );
                       }
                     }
-                  })
-                ],
-              ),
+                  }),
+                )
+              ],
             ),
           ),
         ),

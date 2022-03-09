@@ -45,7 +45,7 @@ class Label {
     final String id = data['id'].toString();
     final String? batch = data['batch'].toString();
     final String? progressive = data['progressive'].toString();
-    final String date = data['date'].toString();
+    final String date = DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd').parse(data['date'].toString()));
     final String? total_weight = data['total_weight'].toString();
     final String weight = data['weight'].toString();
     final String number = data['number'].toString();

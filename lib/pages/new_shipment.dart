@@ -11,7 +11,7 @@ import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import '../model/carrier.dart';
+import '../model/carriers.dart';
 import '../model/customers.dart';
 import '../repositories/repository.dart';
 import 'detail_new_shipment.dart';

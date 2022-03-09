@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:agros_app/model/customers.dart';
 import 'package:agros_app/repositories/repository.dart';
 
-import '../model/carrier.dart';
+import '../model/carriers.dart';
 import '../model/label.dart';
 
 

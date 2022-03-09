@@ -1,3 +1,4 @@
+// @dart=2.9
 import 'package:agros_app/blocs/get_shipment.dart';
 import 'package:agros_app/pages/detail_new_shipment.dart';
 import 'package:agros_app/pages/detail_shipment.dart';
@@ -28,6 +29,9 @@ import 'blocs/get_team.dart';
 import 'blocs/user_me.dart';
 
 final getIt = GetIt.instance;
+const String COMPLAINT_OPEN = '0';
+const String COMPLAINT_PROCESSING = '1';
+const String COMPLAINT_CLOSED = '2';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

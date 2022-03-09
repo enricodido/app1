@@ -2,7 +2,6 @@
 import 'package:agros_app/model/shipment.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../main.dart';
-import '../model/label.dart';
 import '../repositories/repository.dart';
 
 class GetShipmentBloc extends Bloc<GetShipmentBlocEvent, GetShipmentBlocState> {

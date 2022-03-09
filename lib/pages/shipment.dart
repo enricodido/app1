@@ -1,4 +1,5 @@
 import 'package:agros_app/blocs/get_shipment.dart';
+import 'package:agros_app/main.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/color.dart';
+import 'detail_new_shipment.dart';
 import 'detail_shipment.dart';
 import 'new_shipment.dart';
 
@@ -53,7 +55,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
             ),
           );
         },
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFF018AAA),
         icon: Icon(
           Icons.add,
           color: Colors.white,
@@ -64,7 +66,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
           'Nuova spedizione',
           style: FlutterFlowTheme.bodyText1.override(
             fontFamily: 'Poppins',
-            color: Colors.green,
+            color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -78,22 +80,22 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
             decoration: BoxDecoration(
               color: Colors.white,
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
-                    child: Text(
-                      'Spedizione',
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
+                  child: Text(
+                    'Spedizioni',
+                    style: FlutterFlowTheme.bodyText1.override(
+                      fontFamily: 'Poppins',
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  BlocBuilder<GetShipmentBloc, GetShipmentBlocState>(
+                ),
+                Expanded(
+                  child: BlocBuilder<GetShipmentBloc, GetShipmentBlocState>(
                       builder: (context, state) {
                     if (state is GetShipmentBlocStateLoading)
                       return Center(child: CircularProgressIndicator());
@@ -102,12 +104,94 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                           (state as GetShipmentBlocStateLoaded).shipments;
                       if (shipments.isNotEmpty) {
                         return ListView.builder(
-                            scrollDirection: Axis.vertical,
                             padding: EdgeInsets.zero,
                             itemCount: shipments.length,
-                            shrinkWrap: true,
                             itemBuilder: (context, index) {
                               final shipment = shipments[index];
+                              Widget icon = Row();
+                              switch (shipment.status) {
+                                case COMPLAINT_OPEN:
+                                icon =  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [Container(
+                                    width: 20,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: Colors.amber,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                              Padding(
+                              padding: EdgeInsetsDirectional
+                                  .fromSTEB(10, 0, 0, 0),
+                              child: Text(
+                              'Carico in Lavorazione',
+                              style: FlutterFlowTheme
+                                  .bodyText1
+                                  .override(
+                              fontFamily: 'Poppins',
+                              fontWeight:
+                              FontWeight.w500,
+                              ),
+                              ),
+                              ),
+                              ]);
+                              break;
+                                case COMPLAINT_PROCESSING:
+                                  icon =  Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.deepOrangeAccent,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                        Padding(
+                                          padding: EdgeInsetsDirectional
+                                              .fromSTEB(10, 0, 0, 0),
+                                          child: Text(
+                                            'Carico Completato',
+                                            style: FlutterFlowTheme
+                                                .bodyText1
+                                                .override(
+                                              fontFamily: 'Poppins',
+                                              fontWeight:
+                                              FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ]);
+                                  break;
+                                case COMPLAINT_CLOSED:
+                                  icon =   Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                        Padding(
+                                          padding: EdgeInsetsDirectional
+                                              .fromSTEB(10, 0, 0, 0),
+                                          child: Text(
+                                            'Carico Spedito',
+                                            style: FlutterFlowTheme
+                                                .bodyText1
+                                                .override(
+                                              fontFamily: 'Poppins',
+                                              fontWeight:
+                                              FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ]);
+                                  break;
+                              }
                               return Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10, 10, 10, 10),
@@ -117,7 +201,7 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            DettagliSpedizioneWidget(),
+                                            DettaglioNuovaSpedizioneWidget(),
                                       ),
                                     );
                                   },
@@ -126,7 +210,9 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                     color: Color(0xFFF5F5F5),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15),
+                                      side: BorderSide(color: Colors.black38, width: 2.0,),
                                     ),
+
                                     child: Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
                                           10, 10, 10, 10),
@@ -139,13 +225,14 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     10, 10, 10, 10),
                                             child: Text(
-                                              'Dettagli spedizione  #' +
+                                              'Spedizione  ' +
                                                   shipment.progressive,
                                               style: FlutterFlowTheme.bodyText1
                                                   .override(
                                                 fontFamily: 'Poppins',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold,
+                                                color:  Color(0xFF018AAA),
                                               ),
                                             ),
                                           ),
@@ -153,49 +240,21 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                             color: Color(0xFF6C6C6C),
                                           ),
                                           Text(
-                                            'ID spedizione: ' +
-                                                shipment.id +
+                                            'Cliente: ' +
+                                            shipment
+                                                .customer.business_name +
                                                 '\nTrasportatore: ' +
-                                                shipment.carrier +
-                                                '\nCliente: ' +
-                                                shipment
-                                                    .customer.business_name +
+                                                shipment.carrier.description +
                                                 '\nData spedizione: ' +
                                                 shipment.date,
                                             style: FlutterFlowTheme.bodyText1,
                                           ),
+
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     20, 10, 20, 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              children: [
-                                               // switch(shipment.status) case open....
-                                                Container(
-                                                  width: 20,
-                                                  height: 20,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0xFF009648),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsetsDirectional
-                                                      .fromSTEB(10, 0, 0, 0),
-                                                  child: Text(
-                                                    'Carico spedito',
-                                                    style: FlutterFlowTheme
-                                                        .bodyText1
-                                                        .override(
-                                                      fontFamily: 'Poppins',
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            child: icon,
                                           ),
                                         ],
                                       ),
@@ -238,8 +297,8 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                     }
                   }
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

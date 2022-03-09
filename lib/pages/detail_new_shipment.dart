@@ -1,4 +1,5 @@
 import 'package:agros_app/pages/shipment.dart';
+import 'package:flutter/services.dart';
 
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
@@ -17,16 +18,36 @@ class DettaglioNuovaSpedizioneWidget extends StatefulWidget {
 
 class _DettaglioNuovaSpedizioneWidgetState
     extends State<DettaglioNuovaSpedizioneWidget> {
-  late TextEditingController textController1;
-  late TextEditingController textController2;
-  var scanQRCode = '';
+  TextEditingController textController1 = TextEditingController();
+  TextEditingController textController2 = TextEditingController();
+  String scanQRCode = '';
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController(text: 'Esempio: #12375');
-    textController2 = TextEditingController(text: ' ');
+
+  }
+
+  Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      textController2.text = barcodeScanRes;
+    });
   }
 
   @override
@@ -58,7 +79,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
                     child: Text(
-                      'Dettaglio nuova spedizione',
+                      'Dettaglio spedizione',
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 22,
@@ -69,16 +90,10 @@ class _DettaglioNuovaSpedizioneWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      onChanged: (_) => EasyDebounce.debounce(
-                        'textController1',
-                        Duration(milliseconds: 2000),
-                            () => setState(() {}),
-                      ),
                       controller: textController1,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'ID Spedizione',
-                        hintText: 'Esempio: #12375',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -93,18 +108,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        suffixIcon: textController1.text.isNotEmpty
-                            ? InkWell(
-                          onTap: () => setState(
-                                () => textController1.clear(),
-                          ),
-                          child: Icon(
-                            Icons.clear,
-                            color: Color(0xFF757575),
-                            size: 22,
-                          ),
-                        )
-                            : null,
+
                       ),
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
@@ -118,16 +122,10 @@ class _DettaglioNuovaSpedizioneWidgetState
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         InkWell(
-                          onTap: () async {
-                            scanQRCode =
-                            await FlutterBarcodeScanner.scanBarcode(
-                              '#C62828', // scanning line color
-                              'Chiudi', // cancel button text
-                              true, // whether to show the flash icon
-                              ScanMode.BARCODE,
-                            );
 
-                            setState(() {});
+                          onTap: ()  {
+                            scanQR();
+
                           },
                           child: Icon(
                             Icons.qr_code,
@@ -140,16 +138,11 @@ class _DettaglioNuovaSpedizioneWidgetState
                             padding:
                             EdgeInsetsDirectional.fromSTEB(10, 15, 0, 0),
                             child: TextFormField(
-                              onChanged: (_) => EasyDebounce.debounce(
-                                'textController2',
-                                Duration(milliseconds: 2000),
-                                    () => setState(() {}),
-                              ),
+
                               controller: textController2,
                               obscureText: false,
                               decoration: InputDecoration(
                                 labelText: 'Codice Pedana',
-                                hintText: ' ',
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Color(0xFF6C6C6C),
@@ -164,18 +157,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                                   ),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                suffixIcon: textController2.text.isNotEmpty
-                                    ? InkWell(
-                                  onTap: () => setState(
-                                        () => textController2.clear(),
-                                  ),
-                                  child: Icon(
-                                    Icons.clear,
-                                    color: Color(0xFF757575),
-                                    size: 22,
-                                  ),
-                                )
-                                    : null,
+
                               ),
                               style: FlutterFlowTheme
                                   .bodyText1
@@ -234,7 +216,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                                 },
                               );
                             },
-                            text: 'Termina nuova spedizione',
+                            text: 'Aggiungi alla spedizione',
                             options: FFButtonOptions(
                               width: 270,
                               height: 50,

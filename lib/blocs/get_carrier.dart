@@ -1,8 +1,6 @@
-
-import 'package:agros_app/model/customers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../main.dart';
-import '../model/carrier.dart';
+import '../model/carriers.dart';
 import '../repositories/repository.dart';
 
 class GetCarrierBloc extends Bloc<GetCarrierBlocEvent, GetCarrierBlocState> {
