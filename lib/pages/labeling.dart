@@ -116,7 +116,8 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                   onTap: ()  {
                                      Navigator.pushNamed(
                                       context,
-                                      DettaglioEtichettaturaWidget.ROUTE_NAME
+                                      DettaglioEtichettaturaWidget.ROUTE_NAME,
+                                      arguments: DettaglioEtichettaturaWidgetArg(label: label)
                                     );
                                   },
                                   child: Card(

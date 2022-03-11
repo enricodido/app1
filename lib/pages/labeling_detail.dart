@@ -7,6 +7,18 @@ import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../model/label.dart';
+
+
+class DettaglioEtichettaturaWidgetArg {
+  DettaglioEtichettaturaWidgetArg({
+    required this.label,
+  });
+
+  final Label? label;
+}
+
+
 class DettaglioEtichettaturaWidget extends StatefulWidget {
   static const ROUTE_NAME = '/labeling_detail';
   @override
@@ -16,20 +28,22 @@ class DettaglioEtichettaturaWidget extends StatefulWidget {
 
 class _DettaglioEtichettaturaWidgetState
     extends State<DettaglioEtichettaturaWidget> {
-  late String dropDownValue1;
-  late TextEditingController textController1;
-  late String dropDownValue2;
-  late String dropDownValue3;
-  late TextEditingController textController2;
-  late TextEditingController textController3;
-  late TextEditingController textController4;
-  late String dropDownValue4;
-  late TextEditingController textController5;
-  late String dropDownValue5;
-  late String dropDownValue6;
-  late TextEditingController textController6;
+ 
+  TextEditingController palletController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController batchController = TextEditingController();
+  TextEditingController weightController = TextEditingController();
+  TextEditingController numberController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
 
 
+  String? selectedBox;
+  String? selectedTeam;
+  String? selectedPallet;
+  String? selectedProduct;
+  String? selectedCustomer;
+
+  Label? label;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -38,12 +52,12 @@ class _DettaglioEtichettaturaWidgetState
 
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
-    textController1 = TextEditingController(text: 'Calcolato in automatico');
-    textController2 = TextEditingController(text: formattedDate);
-    textController3 = TextEditingController(text: '342');
-    textController4 = TextEditingController(text: '150');
-    textController5 = TextEditingController(text: '5');
-    textController6 = TextEditingController(text: 'Dettaglio note.......');
+    palletController = TextEditingController(text: label?.progressive);
+    dateController = TextEditingController(text: formattedDate);
+    batchController = TextEditingController(text: '342');
+    weightController = TextEditingController(text: '150');
+    numberController = TextEditingController(text: '5');
+    noteController = TextEditingController(text: 'Dettaglio note.......');
 
   }
 
@@ -76,7 +90,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
                     child: Text(
-                      'Dettagli etichettatura #3',
+                      'Dettagli etichettatura #' ,
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 22,
@@ -87,11 +101,11 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      controller: textController1,
+                      controller: palletController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Progressivo Pedana',
-                        hintText: 'Calcolato in automatico',
+                       
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -187,7 +201,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController2,
+                      controller: dateController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Data di raccolta',
@@ -215,7 +229,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController3,
+                      controller: batchController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'n° lotto',
@@ -244,7 +258,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController4,
+                      controller: weightController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Peso',
@@ -298,7 +312,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController5,
+                      controller: numberController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Numero casse',
@@ -375,7 +389,7 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController6,
+                      controller: noteController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Note (facoltativo)',
