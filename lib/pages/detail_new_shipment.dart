@@ -1,12 +1,23 @@
+import 'package:agros_app/model/shipment.dart';
 import 'package:agros_app/pages/shipment.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/get_shipment.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+/*class DettaglioNuovaSpedizioneWidgetArg {
+  DettaglioNuovaSpedizioneWidgetArg({required this.shipment_id,
+  });
+
+  final String shipment_id;
+}*/
 
 class DettaglioNuovaSpedizioneWidget extends StatefulWidget {
   static const ROUTE_NAME = '/new_shipment_detail';
@@ -22,11 +33,21 @@ class _DettaglioNuovaSpedizioneWidgetState
   TextEditingController textController2 = TextEditingController();
   String scanQRCode = '';
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  late String shipment_id;
+
 
   @override
   void initState() {
     super.initState();
+  /*  SchedulerBinding.instance!.addPostFrameCallback((_) async {
+    setState(() {
+      final args = ModalRoute.of(context)!.settings.arguments as DettaglioNuovaSpedizioneWidgetArg;
 
+      shipment_id = args.shipment_id!;
+    });
+      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocRefreshEvent());
+      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocGetEvent(/*shipment_id: shipment_id*/));
+    });*/
   }
 
   Future<void> scanQR() async {
@@ -57,7 +78,6 @@ class _DettaglioNuovaSpedizioneWidgetState
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.secondaryColor,
         automaticallyImplyLeading: true,
-        actions: [],
         centerTitle: true,
         elevation: 4,
       ),

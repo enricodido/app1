@@ -1,7 +1,12 @@
+import 'package:agros_app/model/shipment.dart';
+
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
+
+import '../model/carriers.dart';
+import '../model/customers.dart';
 
 class DettagliSpedizioneWidget extends StatefulWidget {
   static const ROUTE_NAME = '/shipment_detail';
@@ -12,23 +17,23 @@ class DettagliSpedizioneWidget extends StatefulWidget {
 }
 
 class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
-  String? dropDownValue1;
-  TextEditingController textController1 = TextEditingController();
-  TextEditingController textController2 = TextEditingController();
-  String? dropDownValue2;
-  TextEditingController textController3 = TextEditingController();
-  TextEditingController textController4 = TextEditingController();
+  TextEditingController progressiveController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController vehicleController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
+  CustomerModel? selectedCustomer;
+  CarrierModel? selectedCarrier;
+  bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    textController1 = TextEditingController(text: 'Calcolato in automatico');
-    textController2 = TextEditingController(text: 'AA000AA');
-    textController3 = TextEditingController(
-        text: '02/02/2022 (mettere calendario da oggi in poi)');
-    textController4 =
-        TextEditingController(text: 'Questo lotto ha questo dettaglio...');
+    TextEditingController textController1 = TextEditingController();
+    TextEditingController textController2 = TextEditingController();
+    TextEditingController textController3 = TextEditingController();
+    TextEditingController textController4 =
+        TextEditingController();
   }
 
   @override
@@ -59,7 +64,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
                     child: Text(
-                      'Dettagli spedizione #3',
+                      'Spedizione # ' + 'shipment.progressive',
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
                         fontSize: 22,
@@ -70,7 +75,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      controller: textController1,
+                      controller: progressiveController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Progressivo Spedizione',
@@ -99,7 +104,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue1,
+                      
                       options: ['Trasportatore 1', 'trasportatore 2'].toList(),
                       onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
@@ -122,7 +127,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController2,
+                      controller: vehicleController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Targa (opzionale)',
@@ -151,7 +156,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
                     child: FlutterFlowDropDown(
-                      initialOption: dropDownValue2 ,
+                      
                       options: ['Cliente 1', 'Cliente 2'].toList(),
                       onChanged: (val) => setState(() =>  val),
                       width: MediaQuery.of(context).size.width,
@@ -174,7 +179,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController3,
+                      controller: dateController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Data di spedizione(mettere calendario)',
@@ -204,7 +209,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-                      controller: textController4,
+                      controller: noteController,
                       obscureText: false,
                       decoration: InputDecoration(
                         labelText: 'Note (facoltativo)',

@@ -49,7 +49,7 @@ class LabelRepository {
      String weight,
      String numbers,
      String property_id,
-      String note,
+     String note,
      String boxes_type_id,
      String team_id,
 

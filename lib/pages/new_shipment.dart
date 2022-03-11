@@ -37,7 +37,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
   void initState() {
     super.initState();
     DateTime now = DateTime.now();
-    String formattedDate = DateFormat('dd-MM-yyyy').format(now);
+    String formattedDate = DateFormat('dd-MM-yyyy HH:mm').format(now);
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
@@ -57,7 +57,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
 
 
 
-    if (date.isNotEmpty && batch.isNotEmpty) {
+    if (date.isNotEmpty ) {
       setState(() {
         isLoading = true;
       });
@@ -81,7 +81,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
           showCustomDialog(
             context: context,
             type: CustomDialog.SUCCESS,
-            msg: 'Bancale caricato con Successo',
+            msg: 'Spedizione creata con Successo',
           );
           setState(() {
             isLoading = false;
@@ -415,7 +415,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                         ),
                         FFButtonWidget(
                           onPressed: () {
-                            Navigator.pushNamed(context, SpedizioneWidget.ROUTE_NAME);
+                            
                             onsubmit();
                           },
                           text: 'Salva',

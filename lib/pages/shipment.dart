@@ -10,6 +10,7 @@ import '../components/flutter_flow_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../components/flutter_flow_widget.dart';
 import '../theme/color.dart';
 import 'detail_new_shipment.dart';
 import 'detail_shipment.dart';
@@ -196,14 +197,10 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10, 10, 10, 10),
                                 child: InkWell(
-                                  onTap: () async {
-                                    await Navigator.push(
+onTap: ()  {
+                                     Navigator.pushNamed(
                                       context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DettaglioNuovaSpedizioneWidget(),
-                                      ),
-                                    );
+                                      DettagliSpedizioneWidget.ROUTE_NAME);
                                   },
                                   child: Card(
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -250,12 +247,45 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                             style: FlutterFlowTheme.bodyText1,
                                           ),
 
-                                          Padding(
+                                         Align(
+                                      alignment: AlignmentDirectional(1, 0),
+                                      child: Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
-                                                    20, 10, 20, 0),
-                                            child: icon,
+                                                   10, 5, 10, 0),
+                                            child: //icon,
+                                             FFButtonWidget(
+                                               
+                                               icon: Icon(Icons.qr_code_outlined,),
+                                              onPressed: () async {
+
+                                                Navigator.pushNamed(context,
+                                                    DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
+                                                  //  arguments: DettaglioNuovaSpedizioneWidgetArg(shipment_id: shipment.id,));
+                                              },
+                                              text: '',
+                                              options: FFButtonOptions(
+                                                width: 50,
+                                                height: 50,
+                                                color:
+                                                Color(0xFF018AAA),
+                                                textStyle: FlutterFlowTheme
+                                                    .subtitle2
+                                                    .override(
+                                                  fontFamily: 'Open Sans',
+                                                  color: Colors.white,
+                                                ),
+                                                borderSide: BorderSide(
+                                                  color: Colors.transparent,
+                                                  width: 1,
+                                                ),
+                                                borderRadius: 12,
+                                              ),
+                                            ),
                                           ),
+                                           ),
+                                           icon,
+                                        
                                         ],
                                       ),
                                     ),
