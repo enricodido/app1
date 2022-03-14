@@ -12,15 +12,15 @@ class Label {
     required this.batch,
     required this.progressive,
     required this.date,
-    required this.total_weight,
-    required this.weight,
+    this.total_weight,
+    this.weight,
     required this.product,
     required this.team,
     required this.number,
-    required this.note,
+    this.note,
   //  required this.pallet,
   //  required this.box,
-  //  required this.customer,
+   // required this.customer,
 
   });
 
@@ -29,14 +29,14 @@ class Label {
   final String? progressive;
   final String date;
   final String? total_weight;
-  final String weight;
+  final String? weight;
   final String number;
-  final String note;
+  final String? note;
   final ProductModel? product;
   final TeamModel? team;
- // final PalletModel pallet;
- // final BoxModel box;
- // final CustomerModel customer;
+//  final PalletModel pallet;
+//  final BoxModel box;
+//  final CustomerModel customer;
 
 
 
@@ -46,10 +46,20 @@ class Label {
     final String? batch = data['batch'].toString();
     final String? progressive = data['progressive'].toString();
     final String date = DateFormat('dd/MM/yyyy').format(DateFormat('yyyy-MM-dd').parse(data['date'].toString()));
-    final String? total_weight = data['total_weight'].toString();
-    final String weight = data['weight'].toString();
-    final String number = data['number'].toString();
-    final String note = data['note'].toString();
+    String total_weight = '';
+    if(data['total_weight'] != null) {
+      total_weight = data['total_weight'].toString();
+    }
+    String note = '';
+    if(data['note'] != null) {
+      note = data['note'].toString();
+    }
+    String weight = '';
+    if(data['weight'] != null) {
+      weight = data['weight'].toString();
+    }
+    
+    final String number = data['numbers'].toString();
     final ProductModel? product = ProductModel.fromData(data['product']);
     final TeamModel? team = TeamModel.fromData(data['team']);
   //  final PalletModel pallet = PalletModel.fromData(data['pallet_type']);

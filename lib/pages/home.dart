@@ -1,3 +1,4 @@
+import 'package:agros_app/pages/pre_label.dart';
 import 'package:agros_app/pages/search.dart';
 import 'package:agros_app/pages/shipment.dart';
 import 'package:flutter/material.dart';
@@ -106,9 +107,8 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            crossAxisSpacing: 0,
-                            mainAxisSpacing: 0,
-                            childAspectRatio: 1,
+                           crossAxisSpacing: 0,
+  mainAxisSpacing: 0,
                           ),
                           primary: false,
                           scrollDirection: Axis.vertical,
@@ -162,7 +162,7 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                                 onTap: () {
                                    Navigator.pushNamed(
                                     context,
-                                    SpedizioneWidget.ROUTE_NAME
+                                    EtichettaturaWidget.ROUTE_NAME
                                   );
                                 },
                                 child: Container(
@@ -175,7 +175,90 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.add_circle_outlined,
+                                        Icons.assignment,
+                                        color: Colors.white,
+                                        size: 60,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 10),
+                                        child: Text(
+                                          'Completa\n Etichetta',
+                                          style: FlutterFlowTheme.bodyText1
+                                              .override(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                             Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  20, 20, 20, 20),
+                              child: InkWell(
+                                onTap: () {
+                                   Navigator.pushNamed(
+                                    context,
+                                    PreEtichettaturaWidget.ROUTE_NAME                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.brown,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.agriculture,
+                                        color: Colors.white,
+                                        size: 60,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0, 0, 0, 10),
+                                        child: Text(
+                                          'Raccolta\n Campo',
+                                          style: FlutterFlowTheme.bodyText1
+                                              .override(
+                                            fontFamily: 'Poppins',
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  20, 20, 20, 20),
+                              child: InkWell(
+                                onTap: () {
+                                   Navigator.pushNamed(
+                                    context,
+                                    SpedizioneWidget.ROUTE_NAME
+                                  );
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.local_shipping_outlined ,
                                         color: Colors.white,
                                         size: 60,
                                       ),

@@ -55,9 +55,14 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
     String vehicle = vehicleController.text.trim();
     String note = noteController.text.trim();
 
+ print(selectedCarrier!.id);
+print(selectedCustomer!.id);
+print(date);
+print(vehicle);
+print(note);
 
 
-    if (date.isNotEmpty ) {
+    if (vehicle.isNotEmpty ) {
       setState(() {
         isLoading = true;
       });
@@ -73,8 +78,8 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
           date.toString(),
           vehicle.toString(),
           note.toString(),
-
         );
+       
         if (data) {
           Navigator.pushNamed(
               context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME);

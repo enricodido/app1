@@ -12,12 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/*class DettaglioNuovaSpedizioneWidgetArg {
-  DettaglioNuovaSpedizioneWidgetArg({required this.shipment_id,
+class DettaglioNuovaSpedizioneWidgetArg {
+  DettaglioNuovaSpedizioneWidgetArg({required this.shipment,
   });
 
-  final String shipment_id;
-}*/
+  final Shipment? shipment;
+}
 
 class DettaglioNuovaSpedizioneWidget extends StatefulWidget {
   static const ROUTE_NAME = '/new_shipment_detail';
@@ -29,9 +29,9 @@ class DettaglioNuovaSpedizioneWidget extends StatefulWidget {
 
 class _DettaglioNuovaSpedizioneWidgetState
     extends State<DettaglioNuovaSpedizioneWidget> {
-  TextEditingController textController1 = TextEditingController();
   TextEditingController textController2 = TextEditingController();
   String scanQRCode = '';
+  String? pallet;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   late String shipment_id;
 
@@ -39,15 +39,13 @@ class _DettaglioNuovaSpedizioneWidgetState
   @override
   void initState() {
     super.initState();
-  /*  SchedulerBinding.instance!.addPostFrameCallback((_) async {
+    SchedulerBinding.instance!.addPostFrameCallback((_) async {
     setState(() {
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioNuovaSpedizioneWidgetArg;
-
-      shipment_id = args.shipment_id!;
+     pallet = args.shipment!.progressive;
     });
-      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocRefreshEvent());
-      BlocProvider.of<GetShipmentBloc>(context).add(GetShipmentBlocGetEvent(/*shipment_id: shipment_id*/));
-    });*/
+      
+    });
   }
 
   Future<void> scanQR() async {
@@ -106,36 +104,15 @@ class _DettaglioNuovaSpedizioneWidgetState
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
-                    child: TextFormField(
-                      controller: textController1,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: 'ID Spedizione',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-
-                      ),
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
+                  ), Text(
+                    pallet!,
+                    style: FlutterFlowTheme.bodyText1.override(
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
                     child: Row(
@@ -162,7 +139,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                               controller: textController2,
                               obscureText: false,
                               decoration: InputDecoration(
-                                labelText: 'Codice Pedana',
+                                labelText: 'Progressivo Pedana',
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: Color(0xFF6C6C6C),
@@ -188,7 +165,10 @@ class _DettaglioNuovaSpedizioneWidgetState
                               ),
                             ),
                           ),
+                         
+                          
                         ),
+                        
                       ],
                     ),
                   ),

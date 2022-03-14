@@ -17,10 +17,10 @@ class BoxesRepository {
 
     if (response.statusCode == 200) {
       List<BoxModel> boxes = [];
-      data['boxes_types'].forEach((box) {
+      data['boxes_tipes'].forEach((box) {
         boxes.add(BoxModel.fromData(box));
       });
-      return boxes;
+      return boxes ;
     }
 
     throw RequestError(data);

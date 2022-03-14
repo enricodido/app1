@@ -197,10 +197,12 @@ class _SpedizioneWidgetState extends State<SpedizioneWidget> {
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10, 10, 10, 10),
                                 child: InkWell(
-onTap: ()  {
+                                      onTap: ()  {
                                      Navigator.pushNamed(
                                       context,
-                                      DettagliSpedizioneWidget.ROUTE_NAME);
+                                      DettagliSpedizioneWidget.ROUTE_NAME,
+                                      arguments: DettagliSpedizioneWidgetArg(shipment: shipment)
+                                      );
                                   },
                                   child: Card(
                                     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -260,8 +262,8 @@ onTap: ()  {
                                               onPressed: () async {
 
                                                 Navigator.pushNamed(context,
-                                                    DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
-                                                  //  arguments: DettaglioNuovaSpedizioneWidgetArg(shipment_id: shipment.id,));
+                                                    DettaglioNuovaSpedizioneWidget.ROUTE_NAME,
+                                                    arguments: DettaglioNuovaSpedizioneWidgetArg(shipment: shipment));
                                               },
                                               text: '',
                                               options: FFButtonOptions(

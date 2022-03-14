@@ -43,6 +43,7 @@ class ShipmentRepository {
       'date': date,
       'vehicle': vehicle,
       'note': note,
+      
     });
     final data = json.decode(response.body);
     if (response.statusCode == 200) {

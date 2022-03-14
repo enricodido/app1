@@ -8,6 +8,7 @@ import 'package:agros_app/pages/login.dart';
 import 'package:agros_app/pages/movements.dart';
 import 'package:agros_app/pages/new_labeling.dart';
 import 'package:agros_app/pages/new_shipment.dart';
+import 'package:agros_app/pages/pre_label.dart';
 import 'package:agros_app/pages/search.dart';
 import 'package:agros_app/pages/shipment.dart';
 import 'package:agros_app/repositories/repository.dart';
@@ -118,6 +119,7 @@ class MyApp extends StatelessWidget {
         SpostamentoMagazzinoWidget.ROUTE_NAME: (_) =>
             SpostamentoMagazzinoWidget(),
         NuovaSpedizioneWidget.ROUTE_NAME: (_) => NuovaSpedizioneWidget(),
+        PreEtichettaturaWidget.ROUTE_NAME: (_) => PreEtichettaturaWidget(),
       },
     );
   }

@@ -5,6 +5,8 @@ import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
 import 'package:agros_app/pages/home.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -24,20 +26,19 @@ import '../repositories/repository.dart';
 import 'labeling.dart';
 
 
-class NuovaEtichettaturaWidget extends StatefulWidget {
-  static const ROUTE_NAME = '/new_labeling';
+class PreEtichettaturaWidget extends StatefulWidget {
+  static const ROUTE_NAME = '/pre_labeling';
   @override
-  _NuovaEtichettaturaWidgetState createState() =>
-      _NuovaEtichettaturaWidgetState();
+  _PreEtichettaturaWidget createState() =>
+      _PreEtichettaturaWidget();
 }
 
-class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
+class _PreEtichettaturaWidget extends State<PreEtichettaturaWidget> {
 
 
   TextEditingController palletController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController batchController = TextEditingController();
-  TextEditingController weightController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
@@ -78,84 +79,30 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
   }
   void onsubmit() async {
 
-    String date = dateController.text.trim();
-    String batch = batchController.text.trim();
-    String weight = weightController.text.trim();
-    String number = numberController.text.trim();
-    String note = noteController.text.trim();
-    String progressive = palletController.text.trim();
-
-    
-    if(date.isNotEmpty && batch.isNotEmpty) {
-
-      setState(() {
-        isLoading = true;
-      });
-
-      try {
-        final data = await getIt.get<Repository>().labelRepository!.record(
-          context,
-          selectedProduct!.id.toString(),
-          selectedPallet!.id.toString() ,
-          date.toString()  ,
-          batch.toString() ,
-          weight.toString() ,
-          number.toString(),
-          selectedCustomer!.id.toString(),
-          note.toString() ,
-          selectedBox!.id.toString(),
-          selectedTeam!.id.toString(),
-          );
-        if(data) {
-
-          Navigator.pushNamed(
-              context, EtichettaturaWidget.ROUTE_NAME);
-          showCustomDialog(
-            context: context,
-            type: CustomDialog.SUCCESS,
-            msg:  'Bancale caricato con Successo',
-          );
-          setState(() {
-            isLoading = false;
-          });
-
-
-
-        }
-
-      } catch (error) {
-        print(error);
-        showCustomDialog(
-          context: context,
-          type: CustomDialog.WARNING,
-          msg: 'Errore!',
-        );
-      }
-
-      setState(() {
-        isLoading = false;
-      });
-
-    } else {
-      showCustomDialog(
-        context: context,
-        type: CustomDialog.ERROR,
-        msg: 'Dati mancanti!',
-      );
-    }
-
+  
 
 
   }
+Future<void> scanQR() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
 
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
 
-
-
-
-
-
-
-
+    setState(() {
+      palletController.text = barcodeScanRes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,13 +155,31 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                       ),
                     ),
                   ),
-                  Padding(
+                   Padding(
+                    padding: EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        InkWell(
+
+                          onTap: ()  {
+                            scanQR();
+
+                          },
+                          child: Icon(
+                            Icons.qr_code,
+                            color: Color(0xFF6C6C6C),
+                            size: 35,
+                          ),
+                        ),
+                  Expanded(
+                    child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
                       controller: palletController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Progressivo Pedana  ',
+                        labelText: 'Segna Collo',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),
@@ -237,6 +202,10 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
 
                     ),
                   ),
+                  ),
+                      ],
+                    ),
+                   ),
                   BlocBuilder<GetPalletBloc, GetPalletBlocState>(
                     builder: (context, state) {
                       if (state is GetPalletBlocStateLoading)
@@ -424,43 +393,6 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
-                    child: TextFormField(
-                      controller: weightController,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: 'Peso in Kg',
-                        hintText: 'in Kg',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
-                      /*validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Inserire Peso';
-                        }
-                        return null;
-                      },*/
-                      keyboardType: TextInputType.number,
-                    ),
-                  ),
-
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
