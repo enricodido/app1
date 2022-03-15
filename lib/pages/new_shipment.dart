@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import '../model/carriers.dart';
 import '../model/customers.dart';
+import '../model/shipment.dart';
 import '../repositories/repository.dart';
 import 'detail_new_shipment.dart';
 
@@ -30,6 +31,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
   TextEditingController noteController = TextEditingController();
   CustomerModel? selectedCustomer;
   CarrierModel? selectedCarrier;
+  Shipment? shipment;
   bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -82,7 +84,8 @@ print(note);
        
         if (data) {
           Navigator.pushNamed(
-              context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME);
+              context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME,
+              arguments: DettaglioNuovaSpedizioneWidgetArg(shipment: shipment));
           showCustomDialog(
             context: context,
             type: CustomDialog.SUCCESS,
@@ -198,7 +201,7 @@ print(note);
 
                             ),
                             child: DropdownButton<CarrierModel>(
-                              hint: Text('Seleziona Tipo di Bancale'),
+                              hint: Text('Seleziona Trasportatore'),
                               isExpanded: true,
                               value: selectedCarrier,
                               icon: const Icon(Icons.arrow_drop_down),

@@ -11,6 +11,7 @@ import '../repositories/repository.dart';
 import 'labeling.dart';
 import 'login.dart';
 import 'movements.dart';
+import 'notClosed.dart';
 
 class HomePagWidget extends StatefulWidget {
   static const ROUTE_NAME = '/home';
@@ -162,7 +163,7 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                                 onTap: () {
                                    Navigator.pushNamed(
                                     context,
-                                    EtichettaturaWidget.ROUTE_NAME
+                                    NoEtichettaturaWidget.ROUTE_NAME
                                   );
                                 },
                                 child: Container(
@@ -204,7 +205,7 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                                 onTap: () {
                                    Navigator.pushNamed(
                                     context,
-                                    PreEtichettaturaWidget.ROUTE_NAME                                  );
+                                    PreEtichettaturaWidget.ROUTE_NAME);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(

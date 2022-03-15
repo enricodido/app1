@@ -52,6 +52,11 @@ class _DettaglioEtichettaturaWidgetState
   TextEditingController numberController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
+  String? hinitBox;
+  String? hinitTeam;
+  String? hinitPallet;
+  String? hinitProduct;
+  String? hinitCustomer;
 
   BoxModel? selectedBox;
   TeamModel? selectedTeam;
@@ -67,17 +72,32 @@ class _DettaglioEtichettaturaWidgetState
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocRefreshEvent());
+      BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocGetEvent());
+
+      BlocProvider.of<GetTeamBloc>(context).add(GetTeamBlocRefreshEvent());
+      BlocProvider.of<GetTeamBloc>(context).add(GetTeamBlocGetEvent());
+
+      BlocProvider.of<GetPalletBloc>(context).add(GetPalletBlocRefreshEvent());
+      BlocProvider.of<GetPalletBloc>(context).add(GetPalletBlocGetEvent());
+
+      BlocProvider.of<GetProductBloc>(context).add(GetProductBlocRefreshEvent());
+      BlocProvider.of<GetProductBloc>(context).add(GetProductBlocGetEvent());
+
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
+    
       
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioEtichettaturaWidgetArg;
       palletController.text = args.label!.progressive!;
       dateController.text = args.label!.date;
       batchController.text = args.label!.batch!;
       numberController.text = args.label!.number;
-      selectedProduct = args.label!.product;
-    //  selectedPallet = args.label!.pallet;
-      selectedTeam = args.label!.team;
-    //  selectedCustomer = args.label!.customer;
-    //  selectedBox = args.label!.box;
+      hinitProduct = args.label!.product!.description + ' ' + args.label!.product!.variety;
+      hinitPallet = args.label!.pallet.description;
+      hinitTeam = args.label!.team!.description;
+      hinitCustomer = args.label!.customer.business_name;
+      hinitBox = args.label!.box.description;
        if (args.label?.total_weight != null) {
         weightController.text = args.label!.total_weight!;
       }   
@@ -86,6 +106,7 @@ class _DettaglioEtichettaturaWidgetState
       }   
       
     });
+  
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
     
@@ -101,14 +122,14 @@ class _DettaglioEtichettaturaWidgetState
     String progressive = palletController.text.trim();
 
     
-    if(date.isNotEmpty && batch.isNotEmpty) {
+    if(date.isNotEmpty && batch.isNotEmpty && weight.isNotEmpty) {
 
       setState(() {
         isLoading = true;
       });
 
       try {
-        final data = await getIt.get<Repository>().labelRepository!.record(
+        final data = await getIt.get<Repository>().labelRepository!.recupdate(
           context,
           selectedProduct!.id.toString(),
           selectedPallet!.id.toString() ,
@@ -128,7 +149,7 @@ class _DettaglioEtichettaturaWidgetState
           showCustomDialog(
             context: context,
             type: CustomDialog.SUCCESS,
-            msg:  'Bancale caricato con Successo',
+            msg:  'Bancale aggiornato con Successo',
           );
           setState(() {
             isLoading = false;
@@ -248,7 +269,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<PalletModel>(
-                              hint: Text('Seleziona Tipo di Bancale'),
+                              hint: Text(hinitPallet ?? 'Null'),
                               isExpanded: true,
                               value: selectedPallet,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -310,7 +331,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<ProductModel>(
-                              hint: Text('Seleziona Tipo di Prodotto'),
+                              hint: Text(hinitProduct ?? 'Null'),
                               isExpanded: true,
                               value: selectedProduct,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -372,7 +393,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<BoxModel>(
-                              hint: Text('Seleziona Tipo di Cassette'),
+                              hint: Text(hinitBox ?? 'Null'),
                               isExpanded: true,
                               value: selectedBox,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -500,30 +521,7 @@ class _DettaglioEtichettaturaWidgetState
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 0),
-                    child: FlutterFlowDropDown(
-                      initialOption: 'Unità di misura',
-                      options: [],
-                      onChanged: (val) => setState(() =>  val),
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      textStyle:
-                      FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        color: Color(0xFF303030),
-                        fontSize: 16,
-                      ),
-
-                      fillColor: Colors.white,
-                      elevation: 2,
-                      borderColor: Color(0xFF6C6C6C),
-                      borderWidth: 0,
-                      borderRadius: 15,
-                      margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
-                      hidesUnderline: true,
-                    ),
-                  ),
+                
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
@@ -575,7 +573,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<CustomerModel>(
-                              hint: Text('Seleziona Proprietario Cassette'),
+                              hint: Text(hinitCustomer ?? 'Null'),
                               isExpanded: true,
                               value: selectedCustomer,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -639,7 +637,7 @@ class _DettaglioEtichettaturaWidgetState
                             child: DropdownButton<TeamModel>(
                               borderRadius: BorderRadius.circular(50),
 
-                              hint: Text('Seleziona Squadra'),
+                              hint: Text(hinitTeam ?? 'Null'),
                               isExpanded: true,
                               value: selectedTeam,
                               icon: const Icon(Icons.arrow_drop_down),

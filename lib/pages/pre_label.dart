@@ -78,7 +78,72 @@ class _PreEtichettaturaWidget extends State<PreEtichettaturaWidget> {
 
   }
   void onsubmit() async {
+    
+    String date = dateController.text.trim();
+    String batch = batchController.text.trim();
+    String number = numberController.text.trim();
+    String note = noteController.text.trim();
+    String progressive = palletController.text.trim();
 
+    
+    if(date.isNotEmpty && batch.isNotEmpty) {
+
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final data = await getIt.get<Repository>().labelRepository!.prelabel(
+          context,
+          progressive.toString(),
+          selectedProduct!.id.toString(),
+          selectedPallet!.id.toString() ,
+          date.toString()  ,
+          batch.toString() ,
+          number.toString(),
+          selectedCustomer!.id.toString(),
+          note.toString() ,
+          selectedBox!.id.toString(),
+          selectedTeam!.id.toString(),
+          );
+          print(progressive);
+        if(data) {
+
+          Navigator.pushNamed(
+              context, EtichettaturaWidget.ROUTE_NAME);
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.SUCCESS,
+            msg:  'Bancale caricato con Successo',
+          );
+          setState(() {
+            isLoading = false;
+          });
+
+
+
+        }
+
+      } catch (error) {
+        print(error);
+        showCustomDialog(
+          context: context,
+          type: CustomDialog.WARNING,
+          msg: 'Errore!',
+        );
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+
+    } else {
+      showCustomDialog(
+        context: context,
+        type: CustomDialog.ERROR,
+        msg: 'Dati mancanti!',
+      );
+    }
   
 
 
@@ -161,10 +226,8 @@ Future<void> scanQR() async {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         InkWell(
-
                           onTap: ()  {
                             scanQR();
-
                           },
                           child: Icon(
                             Icons.qr_code,
@@ -179,7 +242,7 @@ Future<void> scanQR() async {
                       controller: palletController,
                       obscureText: false,
                       decoration: InputDecoration(
-                        labelText: 'Segna Collo',
+                        labelText: 'Segnacollo',
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color(0xFF6C6C6C),

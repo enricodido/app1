@@ -1,6 +1,7 @@
 import 'package:agros_app/model/shipment.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/get_carrier.dart';
 import '../blocs/get_customer.dart';
@@ -34,9 +35,9 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
   TextEditingController vehicleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
   CustomerModel? selectedCustomer;
-  List<CustomerModel> customers = [];
   CarrierModel? selectedCarrier;
-  List<CarrierModel> carriers = [];
+  String? hintcustomer;
+ String? hintcarrier;
   Shipment? shipment;
   bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -49,19 +50,22 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
       final args = ModalRoute.of(context)!.settings.arguments as DettagliSpedizioneWidgetArg;
      progressiveController.text = args.shipment!.progressive;
      dateController.text = args.shipment!.date;
-     selectedCustomer = args.shipment!.customer;
-     selectedCarrier = args.shipment!.carrier;
-
+     hintcarrier =  args.shipment!.carrier.description;
+     hintcustomer =  args.shipment!.customer.business_name;
+    
+      print(args.shipment!.customer.id);
+      print(args.shipment!.carrier.id);
     });
-        
+      
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
 
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
     
-    });
    
+  
+    });
   }
 
   @override
@@ -131,6 +135,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                       ),
                     ),
                   ),
+                
                     BlocBuilder<GetCarrierBloc, GetCarrierBlocState>(
                     builder: (context, state) {
                       if (state is GetCarrierBlocStateLoading)
@@ -152,7 +157,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
 
                             ),
                             child: DropdownButton<CarrierModel>(
-                              hint: Text('Seleziona Tipo di Bancale'),
+                              hint: Text(hintcarrier ?? 'Null'),
                               isExpanded: true,
                               value: selectedCarrier,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -243,7 +248,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
 
                             ),
                             child: DropdownButton<CustomerModel>(
-                              hint: Text('Seleziona Cliente'),
+                              hint: Text(hintcustomer ?? 'Null'),
                               isExpanded: true,
                               value: selectedCustomer,
                               icon: const Icon(Icons.arrow_drop_down),

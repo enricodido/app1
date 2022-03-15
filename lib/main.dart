@@ -28,6 +28,7 @@ import 'blocs/get_pallet.dart';
 import 'blocs/get_product.dart';
 import 'blocs/get_team.dart';
 import 'blocs/user_me.dart';
+import 'pages/notClosed.dart';
 
 final getIt = GetIt.instance;
 const String COMPLAINT_OPEN = '0';
@@ -109,17 +110,16 @@ class MyApp extends StatelessWidget {
         HomePagWidget.ROUTE_NAME: (_) => HomePagWidget(),
         SpedizioneWidget.ROUTE_NAME: (_) => SpedizioneWidget(),
         DettagliSpedizioneWidget.ROUTE_NAME: (_) => DettagliSpedizioneWidget(),
-        DettaglioNuovaSpedizioneWidget.ROUTE_NAME: (_) =>
-            DettaglioNuovaSpedizioneWidget(),
+        DettaglioNuovaSpedizioneWidget.ROUTE_NAME: (_) =>DettaglioNuovaSpedizioneWidget(),
         EtichettaturaWidget.ROUTE_NAME: (_) => EtichettaturaWidget(),
-        DettaglioEtichettaturaWidget.ROUTE_NAME: (_) =>
-            DettaglioEtichettaturaWidget(),
+        DettaglioEtichettaturaWidget.ROUTE_NAME: (_) =>DettaglioEtichettaturaWidget(),
         NuovaEtichettaturaWidget.ROUTE_NAME: (_) => NuovaEtichettaturaWidget(),
         RicercaProdottiWidget.ROUTE_NAME: (_) => RicercaProdottiWidget(),
-        SpostamentoMagazzinoWidget.ROUTE_NAME: (_) =>
-            SpostamentoMagazzinoWidget(),
+        SpostamentoMagazzinoWidget.ROUTE_NAME: (_) =>SpostamentoMagazzinoWidget(),
         NuovaSpedizioneWidget.ROUTE_NAME: (_) => NuovaSpedizioneWidget(),
         PreEtichettaturaWidget.ROUTE_NAME: (_) => PreEtichettaturaWidget(),
+        NoEtichettaturaWidget.ROUTE_NAME: (_) => NoEtichettaturaWidget(),
+        
       },
     );
   }
