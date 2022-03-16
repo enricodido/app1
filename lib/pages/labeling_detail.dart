@@ -52,11 +52,6 @@ class _DettaglioEtichettaturaWidgetState
   TextEditingController numberController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
-  String? hinitBox;
-  String? hinitTeam;
-  String? hinitPallet;
-  String? hinitProduct;
-  String? hinitCustomer;
 
   BoxModel? selectedBox;
   TeamModel? selectedTeam;
@@ -64,6 +59,13 @@ class _DettaglioEtichettaturaWidgetState
   ProductModel? selectedProduct;
   CustomerModel? selectedCustomer;
   Label? label;
+ 
+  String? customerId;
+  String? teamId;
+  String? palletId;
+  String? boxId;
+  String? productId;
+
 
   bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -71,6 +73,8 @@ class _DettaglioEtichettaturaWidgetState
   @override
   void initState() {
     super.initState();
+     DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd-MM-yyyy').format(now);
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
       BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocRefreshEvent());
       BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocGetEvent());
@@ -86,29 +90,46 @@ class _DettaglioEtichettaturaWidgetState
 
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
-    
-      
+      dateController = TextEditingController(text: formattedDate);
+      setState(() {
+        
+     
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioEtichettaturaWidgetArg;
       palletController.text = args.label!.progressive!;
       dateController.text = args.label!.date;
       batchController.text = args.label!.batch!;
       numberController.text = args.label!.number;
-      hinitProduct = args.label!.product!.description + ' ' + args.label!.product!.variety;
-      hinitPallet = args.label!.pallet.description;
-      hinitTeam = args.label!.team!.description;
-      hinitCustomer = args.label!.customer.business_name;
-      hinitBox = args.label!.box.description;
+  
+      productId =  args.label!.product!.id;
+      boxId =  args.label!.box.id;
+      palletId = args.label!.pallet.id;
+      teamId = args.label!.team!.id;
+      customerId = args.label!.customer.id;
+    //  selectedCustomer = args.label!.customer;
+      
        if (args.label?.total_weight != null) {
         weightController.text = args.label!.total_weight!;
       }   
        if (args.label?.note != null) {
         noteController.text = args.label!.note!;
       }   
-      
+
+    
+       });
+     
+      print(selectedProduct!.id);
+      print(selectedPallet!.id);
+      print(dateController);
+      print(batchController);
+      print(weightController);
+       print(selectedCustomer!.id);
+      print(selectedBox!.id);
+      print(selectedTeam!.id);
+      print(numberController);
+      print(noteController);
     });
   
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(now);
+    
     
   }
 
@@ -119,29 +140,42 @@ class _DettaglioEtichettaturaWidgetState
     String weight = weightController.text.trim();
     String number = numberController.text.trim();
     String note = noteController.text.trim();
-    String progressive = palletController.text.trim();
+ //   String progressive = palletController.text.trim();
 
     
-    if(date.isNotEmpty && batch.isNotEmpty && weight.isNotEmpty) {
+    if(selectedCustomer != null) {
 
       setState(() {
         isLoading = true;
       });
-
+      print(selectedProduct!.id);
+      print(selectedPallet!.id);
+      print(dateController);
+      print(batchController);
+      print(weightController);
+       print(selectedCustomer!.id);
+      print(selectedBox!.id);
+      print(selectedTeam!.id);
+      print(numberController);
+      print(noteController);
       try {
         final data = await getIt.get<Repository>().labelRepository!.recupdate(
           context,
+          label!.id,
           selectedProduct!.id.toString(),
           selectedPallet!.id.toString() ,
           date.toString()  ,
           batch.toString() ,
           weight.toString() ,
-          number.toString(),
           selectedCustomer!.id.toString(),
-          note.toString() ,
           selectedBox!.id.toString(),
           selectedTeam!.id.toString(),
+          number.toString(),
+          note.toString() ,
+          
+          
           );
+          
         if(data) {
 
           Navigator.pushNamed(
@@ -155,7 +189,7 @@ class _DettaglioEtichettaturaWidgetState
             isLoading = false;
           });
 
-        }
+          }
 
       } catch (error) {
         print(error);
@@ -221,8 +255,8 @@ class _DettaglioEtichettaturaWidgetState
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
                     child: TextFormField(
-                      textAlign: TextAlign.center,
-                      enabled: false,
+                      textAlign: TextAlign.left,
+                      readOnly: true,
                       controller: palletController,
                       obscureText: false,
                       decoration: InputDecoration(
@@ -256,7 +290,14 @@ class _DettaglioEtichettaturaWidgetState
                       else {
                         List<PalletModel> pallets =
                             (state as GetPalletBlocStateLoaded).pallets;
-                        
+                         String val = palletId!;
+                        if(pallets.length > 0) {
+                            pallets.forEach((pallet) {                         
+                              if(val == pallet.id) {                              
+                                  selectedPallet = pallet;                         
+                              }
+                            });
+                          }
 
                         if (pallets.isNotEmpty) {
                           return Container(
@@ -269,7 +310,6 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<PalletModel>(
-                              hint: Text(hinitPallet ?? 'Null'),
                               isExpanded: true,
                               value: selectedPallet,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -287,6 +327,7 @@ class _DettaglioEtichettaturaWidgetState
                                 setState(() {
                                   print(value);
                                   selectedPallet = value;
+                                  palletId = selectedPallet!.id;
                                 });
                               },
                               items: pallets.map<DropdownMenuItem<PalletModel>>(
@@ -319,7 +360,14 @@ class _DettaglioEtichettaturaWidgetState
                             (state as GetProductBlocStateLoaded).products;
                         // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
                         // print(selectedVehicle?.description);
-
+                        String val = productId!;
+                        if(products.length > 0) {
+                            products.forEach((product) {                         
+                              if(val == product.id) {                              
+                                  selectedProduct = product;                         
+                              }
+                            });
+                          }
                         if (products.isNotEmpty) {
                           return Container(
                             margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
@@ -331,7 +379,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<ProductModel>(
-                              hint: Text(hinitProduct ?? 'Null'),
+                            
                               isExpanded: true,
                               value: selectedProduct,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -349,6 +397,7 @@ class _DettaglioEtichettaturaWidgetState
                                 setState(() {
                                   print(value);
                                   selectedProduct = value;
+                                  productId = selectedProduct!.id;
                                 });
                               },
                               items: products.map<DropdownMenuItem<ProductModel>>(
@@ -381,7 +430,14 @@ class _DettaglioEtichettaturaWidgetState
                             (state as GetBoxesBlocStateLoaded).boxes;
                         // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
                         // print(selectedVehicle?.description);
-
+                        String val = boxId!;
+                        if(boxes.length > 0) {
+                            boxes.forEach((box) {                         
+                              if(val == box.id) {                              
+                                  selectedBox = box;                         
+                              }
+                            });
+                          }
                         if (boxes.isNotEmpty) {
                           return Container(
                             margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
@@ -393,7 +449,6 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<BoxModel>(
-                              hint: Text(hinitBox ?? 'Null'),
                               isExpanded: true,
                               value: selectedBox,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -411,6 +466,7 @@ class _DettaglioEtichettaturaWidgetState
                                 setState(() {
                                   print(value);
                                   selectedBox = value;
+                                  boxId = selectedBox!.id;
                                 });
                               },
                               items: boxes.map<DropdownMenuItem<BoxModel>>(
@@ -559,9 +615,16 @@ class _DettaglioEtichettaturaWidgetState
                       else {
                         List<CustomerModel> customers =
                             (state as GetCustomerBlocStateLoaded).customers;
-                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
-                        // print(selectedVehicle?.description);
-
+                            print(customers);                        
+                        String val = customerId!;
+                        if(customers.length > 0) {
+                            customers.forEach((customer) {                         
+                              if(val == customer.id) {                              
+                                  selectedCustomer = customer;                         
+                              }
+                            });
+                          }
+                          
                         if (customers.isNotEmpty) {
                           return Container(
                             margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
@@ -573,7 +636,7 @@ class _DettaglioEtichettaturaWidgetState
 
                             ),
                             child: DropdownButton<CustomerModel>(
-                              hint: Text(hinitCustomer ?? 'Null'),
+                            
                               isExpanded: true,
                               value: selectedCustomer,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -591,6 +654,7 @@ class _DettaglioEtichettaturaWidgetState
                                 setState(() {
                                   print(value);
                                   selectedCustomer = value;
+                                  customerId = selectedCustomer!.id;
                                 });
                               },
                               items: customers.map<DropdownMenuItem<CustomerModel>>(
@@ -621,9 +685,15 @@ class _DettaglioEtichettaturaWidgetState
                       else {
                         List<TeamModel> teams =
                             (state as GetTeamBlocStateLoaded).teams;
-                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
-                        // print(selectedVehicle?.description);
-
+                       
+                        String val = teamId!;
+                        if(teams.length > 0) {
+                            teams.forEach((team) {                         
+                              if(val == team.id) {                              
+                                  selectedTeam = team;                         
+                              }
+                            });
+                          }
                         if (teams.isNotEmpty) {
                           return Container(
                             margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
@@ -636,8 +706,6 @@ class _DettaglioEtichettaturaWidgetState
                             ),
                             child: DropdownButton<TeamModel>(
                               borderRadius: BorderRadius.circular(50),
-
-                              hint: Text(hinitTeam ?? 'Null'),
                               isExpanded: true,
                               value: selectedTeam,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -656,6 +724,7 @@ class _DettaglioEtichettaturaWidgetState
                                 setState(() {
                                   print(value);
                                   selectedTeam = value;
+                                  teamId = selectedTeam!.id;
                                 });
                               },
                               items: teams.map<DropdownMenuItem<TeamModel>>(

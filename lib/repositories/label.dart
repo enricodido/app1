@@ -136,6 +136,7 @@ Future<bool> prelabel(
 
    Future<bool> recupdate(
       context,
+     String label_id,
      String product_id ,
      String pallet_type_id,
      String date,
@@ -150,7 +151,7 @@ Future<bool> prelabel(
   ) async {
     final response =
     await repository.http!.post(
-        url: 'update/labeling_and_loadings', bodyParameters: {
+        url: 'update/labeling_and_loadings/' + label_id, bodyParameters: {
       'product_id': product_id,
       'pallet_type_id': pallet_type_id,
       'date': date,
