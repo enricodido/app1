@@ -5,13 +5,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../blocs/get_carrier.dart';
 import '../blocs/get_customer.dart';
+import '../components/customDialog.dart';
 import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../main.dart';
 import '../model/carriers.dart';
 import '../model/customers.dart';
+import '../repositories/repository.dart';
 import 'detail_new_shipment.dart';
 
 class DettagliSpedizioneWidgetArg {
@@ -34,10 +37,11 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
   TextEditingController dateController = TextEditingController();
   TextEditingController vehicleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
+
+  
   CustomerModel? selectedCustomer;
   CarrierModel? selectedCarrier;
-  String? hintcustomer;
- String? hintcarrier;
+ 
   Shipment? shipment;
   bool isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -46,16 +50,16 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
   void initState() {
     super.initState();
      SchedulerBinding.instance!.addPostFrameCallback((_) async {
-     setState(() {
+     
       final args = ModalRoute.of(context)!.settings.arguments as DettagliSpedizioneWidgetArg;
      progressiveController.text = args.shipment!.progressive;
      dateController.text = args.shipment!.date;
-     hintcarrier =  args.shipment!.carrier.description;
-     hintcustomer =  args.shipment!.customer.business_name;
+     selectedCarrier =  args.shipment!.carrier;
+     selectedCustomer =  args.shipment!.customer;
     
       print(args.shipment!.customer.id);
       print(args.shipment!.carrier.id);
-    });
+  
       
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
       BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
@@ -67,6 +71,73 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
   
     });
   }
+
+void onsubmit() async {
+    String date = dateController.text.trim();
+    String batch = progressiveController.text.trim();
+    String vehicle = vehicleController.text.trim();
+    String note = noteController.text.trim();
+
+ print(selectedCarrier!.id);
+print(selectedCustomer!.id);
+print(date);
+print(vehicle);
+print(note);
+
+
+    if (vehicle.isNotEmpty ) {
+      setState(() {
+        isLoading = true;
+      });
+
+      try {
+        final data = await getIt
+            .get<Repository>()
+            .shipmentRepository!
+            .update(
+          context,
+          shipment!.id,
+          selectedCarrier!.id.toString(),
+          selectedCustomer!.id.toString(),
+          date.toString(),
+          vehicle.toString(),
+          note.toString(),
+        );
+       
+        if (data) {
+          Navigator.pushNamed(
+              context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME,
+              arguments: DettaglioNuovaSpedizioneWidgetArg(shipment: shipment));
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.SUCCESS,
+            msg: 'Spedizione creata con Successo',
+          );
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (error) {
+        print(error);
+        showCustomDialog(
+          context: context,
+          type: CustomDialog.WARNING,
+          msg: 'Errore!',
+        );
+      }
+
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      showCustomDialog(
+        context: context,
+        type: CustomDialog.ERROR,
+        msg: 'Dati mancanti!',
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +228,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
 
                             ),
                             child: DropdownButton<CarrierModel>(
-                              hint: Text(hintcarrier ?? 'Null'),
+                          
                               isExpanded: true,
                               value: selectedCarrier,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -234,8 +305,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                       else {
                         List<CustomerModel> customers =
                             (state as GetCustomerBlocStateLoaded).customers;
-                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
-                        // print(selectedVehicle?.description);
+                        
 
                         if (customers.isNotEmpty) {
                           return Container(
@@ -248,7 +318,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
 
                             ),
                             child: DropdownButton<CustomerModel>(
-                              hint: Text(hintcustomer ?? 'Null'),
+                            //  hint: Text(hintcustomer ?? 'Null'),
                               isExpanded: true,
                               value: selectedCustomer,
                               icon: const Icon(Icons.arrow_drop_down),
@@ -270,7 +340,9 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                               },
                               items: customers.map<DropdownMenuItem<CustomerModel>>(
                                       (CustomerModel customer) {
+                                        print(customer.id);
                                     return DropdownMenuItem<CustomerModel>(
+                                      
                                       value: customer,
                                       child: Text(
                                         customer.business_name ,
@@ -370,6 +442,29 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                               color: Colors.white,
                               fontSize: 18,
 
+                            ),
+                            borderSide: BorderSide(
+                              color: Colors.transparent,
+                              width: 1,
+                            ),
+                            borderRadius: 15,
+                          ),
+                        ),
+                        FFButtonWidget(
+                          onPressed: () {
+                            
+                            onsubmit();
+                          },
+                          text: 'Salva',
+                          options: FFButtonOptions(
+                            width: 150,
+                            height: 50,
+                            color: FlutterFlowTheme.secondaryColor,
+                            textStyle:
+                            FlutterFlowTheme.subtitle2.override(
+                              fontFamily: 'Poppins',
+                              color: Colors.white,
+                              fontSize: 18,
                             ),
                             borderSide: BorderSide(
                               color: Colors.transparent,

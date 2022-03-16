@@ -54,4 +54,36 @@ class ShipmentRepository {
       return false;
     }
   }
+
+Future<bool> update(
+      context,
+      String shipment_id,
+      String carrier_id ,
+      String customer_id,
+      String date,
+      String vehicle,
+      String note,
+
+
+      ) async {
+    final response =
+    await repository.http!.post(
+        url: 'update/shippings/' + shipment_id, bodyParameters: {
+      'carrier_id': carrier_id,
+      'customer_id': customer_id,
+      'date': date,
+      'vehicle': vehicle,
+      'note': note,
+      
+    });
+    final data = json.decode(response.body);
+    if (response.statusCode == 200) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
 }
