@@ -148,16 +148,7 @@ class _DettaglioEtichettaturaWidgetState
       setState(() {
         isLoading = true;
       });
-      print(selectedProduct!.id);
-      print(selectedPallet!.id);
-      print(dateController);
-      print(batchController);
-      print(weightController);
-       print(selectedCustomer!.id);
-      print(selectedBox!.id);
-      print(selectedTeam!.id);
-      print(numberController);
-      print(noteController);
+     
       try {
         final data = await getIt.get<Repository>().labelRepository!.recupdate(
           context,

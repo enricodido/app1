@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../blocs/get_label.dart';
+import '../blocs/get_open.dart';
 import '../components/flutter_flow_theme.dart';
 import '../main.dart';
 import '../repositories/repository.dart';
@@ -33,7 +34,10 @@ class _NoEtichettaturaWidgetState extends State<NoEtichettaturaWidget> {
   @override
   void initState() {
     super.initState();
-
+ SchedulerBinding.instance!.addPostFrameCallback((_) async {
+      BlocProvider.of<GetOpenBloc>(context).add(GetOpenBlocRefreshEvent());
+      BlocProvider.of<GetOpenBloc>(context).add(GetOpenBlocGetEvent());
+    });
   }
   
 Future<void> scanQR() async {
@@ -150,19 +154,132 @@ Future<void> scanQR() async {
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
-
+                    
                     ),
                   ),
                   ),
+                      ]
+                    ),
+                   ),
+                   Padding(
+                     padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
+                   child: Expanded(
+                  child: BlocBuilder<GetOpenBloc, GetOpenBlocState>(
+                      builder: (context, state) {
+                    if (state is GetOpenBlocStateLoading)
+                      return Center(child: CircularProgressIndicator());
+                    else {
+                      final labels = (state as GetOpenBlocStateLoaded).labels;
+                      if (labels.isNotEmpty) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.zero,
+                            itemCount: labels.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final label = labels[index];
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10, 10, 10, 10),
+                                child: InkWell(
+                                  onTap: ()  {
+                                     Navigator.pushNamed(
+                                      context,
+                                      DettaglioEtichettaturaWidget.ROUTE_NAME,
+                                      arguments: DettaglioEtichettaturaWidgetArg(label: label)
+                                    );
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    color: Color(0xFFF5F5F5),
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(color: Colors.black38, width: 2.0,),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          10, 10, 10, 10),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 10, 0, 5),
+                                            child: Text(
+                                              'Etichettatura ' + label.progressive! +  '  ' + label.date  ,
+
+                                              style: FlutterFlowTheme.bodyText1
+                                                  .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ),
+                                          Divider(
+                                            color: Color(0xFF6C6C6C),
+                                          ),
+                                          Text(
+                                            'Lotto: ' +  label.batch! + '\n'
+                                            'Prodotto: ' + label.product!.description + ' ' + label.product!.variety +'\n'
+                                            
+                                            'Squadra di raccolta: ' + label.team!.description,
+                                            style: FlutterFlowTheme.bodyText1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.folderOpen,
+                                    color: firstColor,
+                                    size: 50,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: AutoSizeText(
+                                    'NESSUN ELEMENTO',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  }),
+                )
+                   ),
                     ]
                     )
                     )
-                ]
+                
               )
             )
           )
-        )
-      )
-    );
+        );
+      
+    
  }
 }

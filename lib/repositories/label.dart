@@ -29,7 +29,7 @@ class LabelRepository {
 
   Future<List<Label>> getNoClose() async {
     final response = await repository.http!.get(
-      url: 'getNoClose/labeling_and_loadings' );
+      url: 'get/open/labeling_and_loadings' );
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {

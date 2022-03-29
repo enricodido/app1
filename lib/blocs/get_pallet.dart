@@ -1,9 +1,7 @@
 
 import 'package:agros_app/model/pallet_type.dart';
-import 'package:agros_app/model/pallet_type.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../main.dart';
-import '../model/label.dart';
 import '../repositories/repository.dart';
 
 class GetPalletBloc extends Bloc<GetPalletBlocEvent, GetPalletBlocState> {
