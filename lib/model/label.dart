@@ -63,7 +63,7 @@ class Label {
     final ProductModel? product = ProductModel.fromData(data['product']);
     final TeamModel? team = TeamModel.fromData(data['team']);
     final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
-    final BoxModel box = BoxModel.fromData(data['boxes_tipe']);
+    final BoxModel box = BoxModel.fromData(data['boxes_type']);
     final CustomerModel customer = CustomerModel.fromData(data['customer']);
 
 

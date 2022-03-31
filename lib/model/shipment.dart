@@ -40,7 +40,7 @@ class Shipment {
     final CustomerModel customer = CustomerModel.fromData(data['customer']);
     final CarrierModel carrier = CarrierModel.fromData(data['carrier']);
     //  final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
-    //  final BoxModel box = BoxModel.fromData(data['boxes_tipe']);
+    //  final BoxModel box = BoxModel.fromData(data['boxes_type']);
     //  final CustomerModel customer = CustomerModel.fromData(data['customer']);
 
 
