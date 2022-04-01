@@ -27,6 +27,8 @@ class LabelRepository {
     throw RequestError(data);
   }
 
+  
+
   Future<List<Label>> getNoClose() async {
     final response = await repository.http!.get(
       url: 'get/open/labeling_and_loadings' );

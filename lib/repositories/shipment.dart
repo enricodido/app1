@@ -55,6 +55,30 @@ class ShipmentRepository {
     }
   }
 
+Future<bool> detail(
+      context,
+      String shipment_id,
+      String note ,
+      
+
+
+      ) async {
+    final response =
+    await repository.http!.post(
+        url: 'detail/shipping', bodyParameters: {
+      'shipping_id' : shipment_id,
+      'labeling_and_loading_id': note,
+    });
+    final data = json.decode(response.body);
+    if (response.statusCode == 200) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
 Future<bool> update(
       context,
       String shipment_id,
@@ -63,8 +87,6 @@ Future<bool> update(
       String date,
       String vehicle,
       String note,
-
-
       ) async {
     final response =
     await repository.http!.post(

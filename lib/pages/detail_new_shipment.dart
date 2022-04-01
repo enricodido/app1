@@ -5,12 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/get_shipment.dart';
+import '../components/customDialog.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../main.dart';
+import '../repositories/repository.dart';
 
 class DettaglioNuovaSpedizioneWidgetArg {
   DettaglioNuovaSpedizioneWidgetArg({required this.shipment,
@@ -31,9 +35,9 @@ class _DettaglioNuovaSpedizioneWidgetState
     extends State<DettaglioNuovaSpedizioneWidget> {
   TextEditingController textController2 = TextEditingController();
   String scanQRCode = '';
-  String? pallet;
+  Shipment? shipment;
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  late String shipment_id;
+  bool isLoading = false;
 
 
   @override
@@ -42,11 +46,69 @@ class _DettaglioNuovaSpedizioneWidgetState
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
     setState(() {
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioNuovaSpedizioneWidgetArg;
-     pallet = args.shipment!.progressive;
+      shipment = args.shipment;
     });
       
     });
   }
+
+void onsubmit() async {
+
+    
+      String note = textController2.text.trim();
+
+
+      if (textController2 != null ) {
+         print(shipment!.id);
+        print(note);
+       
+        setState(() {
+          isLoading = true;
+        });
+
+        try {
+          final data = await getIt
+              .get<Repository>()
+              .shipmentRepository!
+              .detail(
+            context,
+            shipment!.id,
+            note.toString(),
+          );
+
+          if (data) {
+            Navigator.pushNamed(
+                context, DettaglioNuovaSpedizioneWidget.ROUTE_NAME,
+                arguments: DettaglioNuovaSpedizioneWidgetArg(shipment: shipment));
+            showCustomDialog(
+              context: context,
+              type: CustomDialog.SUCCESS,
+              msg: 'Bancale aggiunto con Successo',
+            );
+            setState(() {
+              isLoading = false;
+            });
+          }
+        } catch (error) {
+          print(error);
+          showCustomDialog(
+            context: context,
+            type: CustomDialog.WARNING,
+            msg: 'Errore!',
+          );
+        }
+
+        setState(() {
+          isLoading = false;
+        });
+      } else {
+        showCustomDialog(
+          context: context,
+          type: CustomDialog.ERROR,
+          msg: 'Dati mancanti!',
+        );
+      }
+    }
 
   Future<void> scanQR() async {
     String barcodeScanRes;
@@ -105,7 +167,7 @@ class _DettaglioNuovaSpedizioneWidgetState
                       ),
                     ),
                   ), Text(
-                    pallet!,
+                    shipment!.progressive,
                     style: FlutterFlowTheme.bodyText1.override(
                       fontFamily: 'Poppins',
                       fontSize: 20,
@@ -182,39 +244,42 @@ class _DettaglioNuovaSpedizioneWidgetState
                         Padding(
                           padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
                           child: FFButtonWidget(
+                            
                             onPressed: () async {
-                              await showDialog(
-                                context: context,
-                                builder: (alertDialogContext) {
-                                  return AlertDialog(
-                                    title: Text(
-                                        'Confermi di aver finito il carico?'),
-                                    content: Text(
-                                        'Una volta completato non sarà più possibile modificare'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(alertDialogContext),
-                                        child: Text('Non ancora'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.pop(alertDialogContext);
-                                          await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SpedizioneWidget(),
-                                            ),
-                                          );
-                                          ;
-                                        },
-                                        child: Text('Conferma'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              onsubmit();
+                             
+                              // await showDialog(
+                              //   context: context,
+                              //   builder: (alertDialogContext) {
+                              //     return AlertDialog(
+                              //       title: Text(
+                              //           'Confermi di aver finito il carico?'),
+                              //       content: Text(
+                              //           'Una volta completato non sarà più possibile modificare'),
+                              //       actions: [
+                              //         TextButton(
+                              //           onPressed: () =>
+                              //               Navigator.pop(alertDialogContext),
+                              //           child: Text('Non ancora'),
+                              //         ),
+                              //         TextButton(
+                              //           onPressed: () async {
+                              //             Navigator.pop(alertDialogContext);
+                              //             await Navigator.push(
+                              //               context,
+                              //               MaterialPageRoute(
+                              //                 builder: (context) =>
+                              //                     SpedizioneWidget(),
+                              //               ),
+                              //             );
+                              //             ;
+                              //           },
+                              //           child: Text('Conferma'),
+                              //         ),
+                              //       ],
+                              //     );
+                              //   },
+                              // );
                             },
                             text: 'Aggiungi alla spedizione',
                             options: FFButtonOptions(

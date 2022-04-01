@@ -70,6 +70,9 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
       BlocProvider.of<GetProductBloc>(context).add(GetProductBlocRefreshEvent());
       BlocProvider.of<GetProductBloc>(context).add(GetProductBlocGetEvent());
 
+      BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocRefreshEvent());
+      BlocProvider.of<GetBoxesBloc>(context).add(GetBoxesBlocGetEvent());
+
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
       BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
       dateController = TextEditingController(text: formattedDate);
@@ -264,7 +267,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -285,7 +288,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                                         pallet.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -451,12 +454,12 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                         fontFamily: 'Poppins',
                         fontSize: 16,
                       ),
-                      /*validator: (value) {
+                      validator: (value) {
                         if (value!.isEmpty) {
                           return 'Inserire Peso';
                         }
                         return null;
-                      },*/
+                      },
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -526,7 +529,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -547,7 +550,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                                     box.description,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                        color:  Color(0xFF009648),
+                                        color:  Colors.black,
                                         fontFamily: 'Open Sans'),
                                   ),
                                 );
@@ -567,8 +570,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                       else {
                         List<CustomerModel> customers =
                             (state as GetCustomerBlocStateLoaded).customers;
-                        // Vehicle? selectedVehicle = (state as GetVehicleBlocStateLoaded).selectedVehicle;
-                        // print(selectedVehicle?.description);
+                      
 
                         if (customers.isNotEmpty) {
                           return Container(
@@ -588,7 +590,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -609,7 +611,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                                         customer.business_name ,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -643,17 +645,14 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
 
                             ),
                             child: DropdownButton<TeamModel>(
-                              borderRadius: BorderRadius.circular(50),
-
                               hint: Text('Seleziona Squadra'),
                               isExpanded: true,
                               value: selectedTeam,
                               icon: const Icon(Icons.arrow_drop_down),
                               iconSize: 25,
                               elevation: 16,
-
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -674,7 +673,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                                         team.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -690,7 +689,6 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(
-
                       controller: noteController,
                       obscureText: false,
                       decoration: InputDecoration(
