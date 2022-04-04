@@ -79,12 +79,11 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
   void onsubmit() async {
 
       String date = dateController.text.trim();
-      String batch = progressiveController.text.trim();
       String vehicle = vehicleController.text.trim();
       String note = noteController.text.trim();
 
 
-      if (selectedCarrier != null && selectedCarrier != null) {
+      if (selectedCarrier != null && selectedCustomer != null) {
         setState(() {
           isLoading = true;
         });
@@ -239,7 +238,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -261,7 +260,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                                         customer.business_name ,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color: Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -309,7 +308,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -331,7 +330,7 @@ class _DettagliSpedizioneWidgetState extends State<DettagliSpedizioneWidget> {
                                         carrier.description ,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );

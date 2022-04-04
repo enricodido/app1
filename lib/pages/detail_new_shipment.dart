@@ -1,9 +1,12 @@
 import 'package:agros_app/model/shipment.dart';
 import 'package:agros_app/pages/shipment.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../blocs/get_label.dart';
 import '../blocs/get_shipment.dart';
 import '../components/customDialog.dart';
 import '../components/flutter_flow_theme.dart';
@@ -15,6 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 import '../repositories/repository.dart';
+import '../theme/color.dart';
 
 class DettaglioNuovaSpedizioneWidgetArg {
   DettaglioNuovaSpedizioneWidgetArg({required this.shipment,
@@ -50,6 +54,9 @@ class _DettaglioNuovaSpedizioneWidgetState
     });
       
     });
+
+      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocRefreshEvent());
+      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocGetEvent());
   }
 
 void onsubmit() async {
@@ -157,12 +164,12 @@ void onsubmit() async {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 30, 0, 20),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
                     child: Text(
                       'Dettaglio spedizione',
                       style: FlutterFlowTheme.bodyText1.override(
                         fontFamily: 'Poppins',
-                        fontSize: 22,
+                        fontSize: 20,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -235,51 +242,23 @@ void onsubmit() async {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 100, 0, 0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+            height:600,
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0,5, 0, 5),
                           child: FFButtonWidget(
                             
                             onPressed: () async {
                               onsubmit();
-                             
-                              // await showDialog(
-                              //   context: context,
-                              //   builder: (alertDialogContext) {
-                              //     return AlertDialog(
-                              //       title: Text(
-                              //           'Confermi di aver finito il carico?'),
-                              //       content: Text(
-                              //           'Una volta completato non sarà più possibile modificare'),
-                              //       actions: [
-                              //         TextButton(
-                              //           onPressed: () =>
-                              //               Navigator.pop(alertDialogContext),
-                              //           child: Text('Non ancora'),
-                              //         ),
-                              //         TextButton(
-                              //           onPressed: () async {
-                              //             Navigator.pop(alertDialogContext);
-                              //             await Navigator.push(
-                              //               context,
-                              //               MaterialPageRoute(
-                              //                 builder: (context) =>
-                              //                     SpedizioneWidget(),
-                              //               ),
-                              //             );
-                              //             ;
-                              //           },
-                              //           child: Text('Conferma'),
-                              //         ),
-                              //       ],
-                              //     );
-                              //   },
-                              // );
+                            
                             },
                             text: 'Aggiungi alla spedizione',
                             options: FFButtonOptions(
@@ -302,11 +281,111 @@ void onsubmit() async {
                             ),
                           ),
                         ),
+                Expanded(
+                  child: 
+                      BlocBuilder<GetLabelBloc, GetLabelBlocState>(
+                      builder: (context, state) {
+                    if (state is GetLabelBlocStateLoading)
+                      return Center(child: CircularProgressIndicator());
+                    else {
+                      final labels = (state as GetLabelBlocStateLoaded).labels;
+                      if (labels.isNotEmpty) {
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            padding: EdgeInsets.zero,
+                            itemCount: labels.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final label = labels[index];
+                              return Padding(
+                                padding: EdgeInsetsDirectional.fromSTEB(
+                                    10, 0, 10, 0),
+                                child: InkWell(
+                                  onTap: ()  {
+                                   
+                                  },
+                                  child: Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    color: Color(0xFFF5F5F5),
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(color: Colors.black38, width: 2.0,),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB( 10, 0, 10, 0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.max,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    0, 10, 0, 5),
+                                            child: Text(
+                                               label.progressive!  ,
+                                              style: FlutterFlowTheme.bodyText1
+                                                  .override(
+                                                fontFamily: 'Poppins',
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ),                 
+                                          Text(      
+                                            'Prodotto: ' + label.product!.description + ' ' + label.product!.variety + '\n'
+                                            'Peso: ' + label.total_weight! + ' Kg',
+                                            style: FlutterFlowTheme.bodyText1,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      } else {
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.folderOpen,
+                                    color: firstColor,
+                                    size: 50,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: AutoSizeText(
+                                    'NESSUN ELEMENTO',
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  }),
+                    ),
+              
+
+                  
                         Align(
                           alignment: AlignmentDirectional(0, -0.15),
                           child: Padding(
                             padding:
-                            EdgeInsetsDirectional.fromSTEB(10, 20, 10, 20),
+                            EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -372,12 +451,14 @@ void onsubmit() async {
                       ],
                     ),
                   ),
-                ],
+                  )],
               ),
             ),
           ),
+                
         ),
       ),
     );
+  
   }
 }

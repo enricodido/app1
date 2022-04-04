@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:agros_app/repositories/repository.dart';
 import '../model/shipment.dart';
+import '../model/shipment_detail.dart';
 
 
 class ShipmentRepository {
@@ -19,6 +20,22 @@ class ShipmentRepository {
         shipments.add(Shipment.fromData(shipment));
       });
       return shipments;
+    }
+
+    throw RequestError(data);
+  }
+
+  Future<List<ShipmentDetail>> getDetail() async {
+    final response = await repository.http!.get(
+      url: 'get/detail/shippings',);
+    final data = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      List<ShipmentDetail> shipping_details = [];
+      data['shipping_details'].forEach((shipping_detail) {
+        shipping_details.add(ShipmentDetail.fromData(shipping_detail));
+      });
+      return shipping_details;
     }
 
     throw RequestError(data);

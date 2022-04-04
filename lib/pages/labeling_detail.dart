@@ -117,16 +117,7 @@ class _DettaglioEtichettaturaWidgetState
     
        });
      
-      print(selectedProduct!.id);
-      print(selectedPallet!.id);
-      print(dateController);
-      print(batchController);
-      print(weightController);
-       print(selectedCustomer!.id);
-      print(selectedBox!.id);
-      print(selectedTeam!.id);
-      print(numberController);
-      print(noteController);
+    
     });
   
     

@@ -77,14 +77,14 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
                               padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 20, 0, 20),
+                                  EdgeInsetsDirectional.fromSTEB(0, 10, 0, 0),
                               child: Text(
                                 'Benvenuto' +
                                     '\n' +

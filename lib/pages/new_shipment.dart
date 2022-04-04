@@ -37,299 +37,9 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
 
   TextEditingController carrierController = TextEditingController();
   CarrierModel? selectedCarrier;
-  void dialogCarrier() {
-
-    BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
-    BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
-
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return Dialog(
-            insetPadding: EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 20.0,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  child: Center(
-                    child: AutoSizeText(
-                      'Trasportatore',
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 30
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(left: 15.0, right: 15.0),
-                      child: BlocBuilder<GetCarrierBloc, GetCarrierBlocState>(
-                          builder: (context, state) {
-                            if (state is GetCarrierBlocStateLoading)
-                              return Center(child: CircularProgressIndicator());
-                            else {
-
-                              final carriers = (state as GetCarrierBlocStateLoaded).carriers;
-
-                              return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: carriers.length,
-                                  itemBuilder: (context, index) {
-
-                                    final carrier = carriers[index];
-
-                                    return GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedCarrier = carrier;
-                                            carrierController.text = selectedCarrier!.description;
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        child: Padding(
-                                            padding: EdgeInsetsDirectional.only(top: 5.0, bottom: 5.0),
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              elevation: 2,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15),
-                                              ),
-                                              child: Container(
-                                                width: MediaQuery.of(context).size.width * 0.9,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFFDBDBDB),
-                                                  borderRadius: BorderRadius.circular(15),
-                                                ),
-                                                child: Container(
-                                                  width: MediaQuery.of(context).size.width * 1,
-                                                  height: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x00EEEEEE),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                    EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        AutoSizeText(
-                                                          carrier.description,
-                                                          maxLines: 1,
-                                                          style: FlutterFlowTheme.bodyText1.override(
-                                                            fontFamily: 'Poppins',
-                                                            fontSize: 24,
-                                                            fontWeight: FontWeight.w600,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                        )
-                                    );
-
-                                  }
-                              );
-                            }
-                          }),
-                    )
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 5.0, bottom: 5.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    child: Center(
-                      child: CustomButtonPrimary(
-                          content: AutoSizeText(
-                            'Chiudi',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          color: Colors.red,
-                          pressed: () {
-                            Navigator.pop(context);
-                          }
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-    );
-
-  }
-
   TextEditingController customerController = TextEditingController();
   CustomerModel? selectedCustomer;
-  void dialogCustomer() {
-
-    BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
-    BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
-
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return Dialog(
-            insetPadding: EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 20.0,
-            ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  child: Center(
-                    child: AutoSizeText(
-                      'Cliente',
-                      maxLines: 1,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 30
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(left: 15.0, right: 15.0),
-                      child: BlocBuilder<GetCustomerBloc, GetCustomerBlocState>(
-                          builder: (context, state) {
-                            if (state is GetCustomerBlocStateLoading)
-                              return Center(child: CircularProgressIndicator());
-                            else {
-
-                              final customers = (state as GetCustomerBlocStateLoaded).customers;
-
-                              return ListView.builder(
-                                  padding: EdgeInsets.zero,
-                                  itemCount: customers.length,
-                                  itemBuilder: (context, index) {
-
-                                    final customer = customers[index];
-
-                                    return GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedCustomer = customer;
-                                            customerController.text = selectedCustomer!.business_name;
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        child: Padding(
-                                            padding: EdgeInsetsDirectional.only(top: 5.0, bottom: 5.0),
-                                            child: Material(
-                                              color: Colors.transparent,
-                                              elevation: 2,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(15),
-                                              ),
-                                              child: Container(
-                                                width: MediaQuery.of(context).size.width * 0.9,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  color: Color(0xFFDBDBDB),
-                                                  borderRadius: BorderRadius.circular(15),
-                                                ),
-                                                child: Container(
-                                                  width: MediaQuery.of(context).size.width * 1,
-                                                  height: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    color: Color(0x00EEEEEE),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                    EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                                                    child: Column(
-                                                      mainAxisSize: MainAxisSize.max,
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        AutoSizeText(
-                                                          customer.business_name,
-                                                          maxLines: 1,
-                                                          style: FlutterFlowTheme.bodyText1.override(
-                                                            fontFamily: 'Poppins',
-                                                            fontSize: 24,
-                                                            fontWeight: FontWeight.w600,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                        )
-                                    );
-
-                                  }
-                              );
-                            }
-                          }),
-                    )
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 12.0, right: 12.0, top: 5.0, bottom: 5.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.07,
-                    child: Center(
-                      child: CustomButtonPrimary(
-                          content: AutoSizeText(
-                            'Chiudi',
-                            maxLines: 1,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          color: Colors.red,
-                          pressed: () {
-                            Navigator.pop(context);
-                          }
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-    );
-
-  }
+  
 
   @override
   void initState() {
@@ -339,6 +49,12 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
       dateController = TextEditingController(text: formattedDate);
     });
+
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocRefreshEvent());
+      BlocProvider.of<GetCustomerBloc>(context).add(GetCustomerBlocGetEvent());
+
+      BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocRefreshEvent());
+      BlocProvider.of<GetCarrierBloc>(context).add(GetCarrierBlocGetEvent());
 
   }
 
@@ -466,75 +182,129 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
-                    child: TextFormField(
-                      onTap: () {
-                        dialogCustomer();
-                      },
-                      readOnly: true,
-                      controller: customerController,
-                      obscureText: false,
-                      textInputAction: TextInputAction.next,
-                      textAlign: TextAlign.left,
-                      decoration: InputDecoration(
-                        labelText: 'Cliente *',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
-                    ),
+                  BlocBuilder<GetCustomerBloc, GetCustomerBlocState>(
+                    builder: (context, state) {
+                      if (state is GetCustomerBlocStateLoading)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        List<CustomerModel> customers =
+                            (state as GetCustomerBlocStateLoaded).customers;
+                      
+
+                        if (customers.isNotEmpty) {
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black),
+
+                            ),
+                            child: DropdownButton<CustomerModel>(
+                              hint: Text('Seleziona Cliente'),
+                              isExpanded: true,
+                              value: selectedCustomer,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Colors.black,
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (CustomerModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedCustomer = value;
+                                });
+                              },
+                              items: customers.map<DropdownMenuItem<CustomerModel>>(
+                                      (CustomerModel customer) {
+                                    return DropdownMenuItem<CustomerModel>(
+                                      value: customer,
+                                      child: Text(
+                                        customer.business_name ,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Colors.black,
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          );
+                        } else {
+                          return Text('Nessun Cliente');
+                        }
+                      }
+                    },
                   ),
                   
-                  Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(10, 20, 10, 0),
-                    child: TextFormField(
-                      onTap: () {
-                        dialogCarrier();
-                      },
-                      readOnly: true,
-                      controller: carrierController,
-                      obscureText: false,
-                      textInputAction: TextInputAction.next,
-                      textAlign: TextAlign.left,
-                      decoration: InputDecoration(
-                        labelText: 'Trasportatore *',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF6C6C6C),
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      style: FlutterFlowTheme.bodyText1.override(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
+                  BlocBuilder<GetCarrierBloc, GetCarrierBlocState>(
+                    builder: (context, state) {
+                      if (state is GetCarrierBlocStateLoading)
+                        return Center(child: CircularProgressIndicator());
+                      else {
+                        List<CarrierModel> carriers =
+                            (state as GetCarrierBlocStateLoaded).carriers;
+                      
+
+                        if (carriers.isNotEmpty) {
+                          return Container(
+                            margin: EdgeInsetsDirectional.fromSTEB(12, 4, 12, 4),
+                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.black),
+
+                            ),
+                            child: DropdownButton<CarrierModel>(
+                              hint: Text('Seleziona Trasportatore'),
+                              isExpanded: true,
+                              value: selectedCarrier,
+                              icon: const Icon(Icons.arrow_drop_down),
+                              iconSize: 25,
+                              elevation: 16,
+                              style: const TextStyle(
+                                color:  Colors.black,
+                                fontSize: 20,
+                              ),
+                              underline: Container(
+                                height: 1,
+                                color: Colors.black,
+                              ),
+                              onChanged: (CarrierModel? value) {
+                                setState(() {
+                                  print(value);
+                                  selectedCarrier = value;
+                                });
+                              },
+                              items: carriers.map<DropdownMenuItem<CarrierModel>>(
+                                      (CarrierModel carrier) {
+                                    return DropdownMenuItem<CarrierModel>(
+                                      value: carrier,
+                                      child: Text(
+                                        carrier.description ,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            color:  Colors.black,
+                                            fontFamily: 'Open Sans'),
+                                      ),
+                                    );
+                                  }).toList(),
+                            ),
+                          );
+                        } else {
+                          return Text('Nessun Trasportatore');
+                        }
+                      }
+                    },
+                  ), 
                   Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(10, 15, 10, 0),
                     child: TextFormField(

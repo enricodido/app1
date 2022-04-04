@@ -24,6 +24,8 @@ import '../repositories/repository.dart';
 import 'labeling.dart';
 
 
+
+
 class NuovaEtichettaturaWidget extends StatefulWidget {
   static const ROUTE_NAME = '/new_labeling';
   @override
