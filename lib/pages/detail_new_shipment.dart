@@ -38,26 +38,28 @@ class DettaglioNuovaSpedizioneWidget extends StatefulWidget {
 
 class _DettaglioNuovaSpedizioneWidgetState
     extends State<DettaglioNuovaSpedizioneWidget> {
+
   TextEditingController textController2 = TextEditingController();
   String scanQRCode = '';
-  Shipment? shipment;
+ 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool isLoading = false;
-
+  Shipment? shipment;
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance!.addPostFrameCallback((_) async {
-    setState(() {
+    setState((){
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioNuovaSpedizioneWidgetArg;
       shipment = args.shipment;
-    });
+      });
+      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocRefreshEvent());
+      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocGetEvent(shipment_id: shipment!.id));
      
     });
  print(shipment!.id);
-      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocRefreshEvent());
-      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocGetEvent(shipment_id: shipment!.id));
+      
   }
 
 void onsubmit() async {

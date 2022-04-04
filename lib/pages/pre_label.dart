@@ -296,7 +296,7 @@ Future<void> scanQR() async {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -317,7 +317,7 @@ Future<void> scanQR() async {
                                         pallet.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -521,7 +521,7 @@ Future<void> scanQR() async {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -542,7 +542,7 @@ Future<void> scanQR() async {
                                     box.description,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                        color:  Color(0xFF009648),
+                                        color:  Colors.black,
                                         fontFamily: 'Open Sans'),
                                   ),
                                 );
@@ -583,7 +583,7 @@ Future<void> scanQR() async {
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -604,7 +604,7 @@ Future<void> scanQR() async {
                                         customer.business_name ,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -648,7 +648,7 @@ Future<void> scanQR() async {
                               elevation: 16,
 
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -669,7 +669,7 @@ Future<void> scanQR() async {
                                         team.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );

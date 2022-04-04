@@ -25,8 +25,8 @@ class ShipmentDetail {
 
     final String id = data['id'].toString();
     
-    final Shipment shipment = Shipment.fromData(data['shipment']);
-    final Label label = Label.fromData(data['label']);
+    final Shipment shipment = Shipment.fromData(data['shipping']);
+    final Label label = Label.fromData(data['labeling_and_loading']);
    
 
 
