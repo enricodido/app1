@@ -77,7 +77,7 @@ class _HomePagWidgetState extends State<HomePagWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(5, 0, 5, 0),
+                        padding: EdgeInsetsDirectional.fromSTEB(5, 10, 5, 0),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,

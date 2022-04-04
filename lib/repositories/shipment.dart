@@ -25,9 +25,9 @@ class ShipmentRepository {
     throw RequestError(data);
   }
 
-  Future<List<ShipmentDetail>> getDetail() async {
+  Future<List<ShipmentDetail>> getDetail({required String shipment_id}) async {
     final response = await repository.http!.get(
-      url: 'get/detail/shippings',);
+      url: 'get/detail/shippings/' + shipment_id,);
     final data = json.decode(response.body);
 
     if (response.statusCode == 200) {

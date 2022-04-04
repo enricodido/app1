@@ -11,7 +11,7 @@ class GetShipmentDetailBloc extends Bloc<GetShipmentDetailBlocEvent, GetShipment
   @override
   Stream<GetShipmentDetailBlocState> mapEventToState(GetShipmentDetailBlocEvent event) async* {
     if (event is GetShipmentDetailBlocGetEvent) {
-      List<ShipmentDetail> shipping_details = await getIt.get<Repository>().shipmentRepository!.getDetail();
+      List<ShipmentDetail> shipping_details = await getIt.get<Repository>().shipmentRepository!.getDetail(shipment_id: event.shipment_id);
 
       yield GetShipmentDetailBlocStateLoaded(shipping_details);
     } else {
@@ -23,8 +23,8 @@ class GetShipmentDetailBloc extends Bloc<GetShipmentDetailBlocEvent, GetShipment
 abstract class GetShipmentDetailBlocEvent {}
 
 class GetShipmentDetailBlocGetEvent extends GetShipmentDetailBlocEvent {
-  GetShipmentDetailBlocGetEvent();
-
+  GetShipmentDetailBlocGetEvent({required this.shipment_id});
+final String shipment_id;
 }
 
 class GetShipmentDetailBlocRefreshEvent extends GetShipmentDetailBlocEvent {}

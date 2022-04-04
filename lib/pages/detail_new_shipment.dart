@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../blocs/get_details.dart';
 import '../blocs/get_label.dart';
 import '../blocs/get_shipment.dart';
 import '../components/customDialog.dart';
@@ -52,11 +53,11 @@ class _DettaglioNuovaSpedizioneWidgetState
       final args = ModalRoute.of(context)!.settings.arguments as DettaglioNuovaSpedizioneWidgetArg;
       shipment = args.shipment;
     });
-      
+     
     });
-
-      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocRefreshEvent());
-      BlocProvider.of<GetLabelBloc>(context).add(GetLabelBlocGetEvent());
+ print(shipment!.id);
+      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocRefreshEvent());
+      BlocProvider.of<GetShipmentDetailBloc>(context).add(GetShipmentDetailBlocGetEvent(shipment_id: shipment!.id));
   }
 
 void onsubmit() async {
@@ -283,20 +284,20 @@ void onsubmit() async {
                         ),
                 Expanded(
                   child: 
-                      BlocBuilder<GetLabelBloc, GetLabelBlocState>(
+                      BlocBuilder<GetShipmentDetailBloc, GetShipmentDetailBlocState>(
                       builder: (context, state) {
-                    if (state is GetLabelBlocStateLoading)
+                    if (state is GetShipmentDetailBlocStateLoading)
                       return Center(child: CircularProgressIndicator());
                     else {
-                      final labels = (state as GetLabelBlocStateLoaded).labels;
-                      if (labels.isNotEmpty) {
+                      final shipping_details = (state as GetShipmentDetailBlocStateLoaded).shipping_details;
+                      if (shipping_details.isNotEmpty) {
                         return ListView.builder(
                             scrollDirection: Axis.vertical,
                             padding: EdgeInsets.zero,
-                            itemCount: labels.length,
+                            itemCount: shipping_details.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              final label = labels[index];
+                              final shipping_detail = shipping_details[index];
                               return Padding(
                                 padding: EdgeInsetsDirectional.fromSTEB(
                                     10, 0, 10, 0),
@@ -322,7 +323,7 @@ void onsubmit() async {
                                                 EdgeInsetsDirectional.fromSTEB(
                                                     0, 10, 0, 5),
                                             child: Text(
-                                               label.progressive!  ,
+                                               'shipping_detail.label.progressive!'  ,
                                               style: FlutterFlowTheme.bodyText1
                                                   .override(
                                                 fontFamily: 'Poppins',
@@ -332,11 +333,11 @@ void onsubmit() async {
                                               ),
                                             ),
                                           ),                 
-                                          Text(      
-                                            'Prodotto: ' + label.product!.description + ' ' + label.product!.variety + '\n'
-                                            'Peso: ' + label.total_weight! + ' Kg',
+                                        /*  Text(      
+                                            'Prodotto: ' + shipping_detail.label.product!.description + ' ' + shipping_detail.label.product!.variety + '\n'
+                                            'Peso: ' + shipping_detail.label.total_weight! + ' Kg',
                                             style: FlutterFlowTheme.bodyText1,
-                                          ),
+                                          ),*/
                                         ],
                                       ),
                                     ),
@@ -385,7 +386,7 @@ void onsubmit() async {
                           alignment: AlignmentDirectional(0, -0.15),
                           child: Padding(
                             padding:
-                            EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                            EdgeInsetsDirectional.fromSTEB(10, 0, 10, 10),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
