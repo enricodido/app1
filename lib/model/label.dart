@@ -32,8 +32,8 @@ class Label {
   final String? weight;
   final String number;
   final String? note;
-  final ProductModel? product;
-  final TeamModel? team;
+  final ProductModel product;
+  final TeamModel team;
   final PalletModel pallet;
   final BoxModel box;
   final CustomerModel customer;
@@ -60,8 +60,8 @@ class Label {
     }
     
     final String number = data['numbers'].toString();
-    final ProductModel? product = ProductModel.fromData(data['product']);
-    final TeamModel? team = TeamModel.fromData(data['team']);
+    final ProductModel product = ProductModel.fromData(data['product']);
+    final TeamModel team = TeamModel.fromData(data['team']);
     final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
     final BoxModel box = BoxModel.fromData(data['boxes_type']);
     final CustomerModel customer = CustomerModel.fromData(data['customer']);

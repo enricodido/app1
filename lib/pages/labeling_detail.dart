@@ -2,20 +2,15 @@ import 'package:agros_app/model/product.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
 import '../blocs/get_boxes_type.dart';
 import '../blocs/get_customer.dart';
 import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
 import '../components/customDialog.dart';
-import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../main.dart';
 import '../model/boxes_type.dart';
 import '../model/customers.dart';
@@ -100,10 +95,10 @@ class _DettaglioEtichettaturaWidgetState
       batchController.text = args.label!.batch!;
       numberController.text = args.label!.number;
   
-      productId =  args.label!.product!.id;
+      productId =  args.label!.product.id;
       boxId =  args.label!.box.id;
       palletId = args.label!.pallet.id;
-      teamId = args.label!.team!.id;
+      teamId = args.label!.team.id;
       customerId = args.label!.customer.id;
     //  selectedCustomer = args.label!.customer;
       

@@ -2,10 +2,7 @@ import '../components/customDialog.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_util.dart';
 import '../components/flutter_flow_widget.dart';
-import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../main.dart';
 import '../repositories/repository.dart';
 import 'home.dart';
@@ -26,7 +23,6 @@ class _LoginPageWidgetState extends State<LoginPageWidget> {
   String passwordError = 'Password richiesta.';
 
   bool textFieldPasswordVisibility = false;
-  bool _loadingButton = false;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 

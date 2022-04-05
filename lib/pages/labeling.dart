@@ -1,19 +1,14 @@
-import 'package:agros_app/components/flutter_flow_util.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-
 import '../blocs/get_label.dart';
 import '../components/flutter_flow_theme.dart';
 import '../main.dart';
 import '../repositories/repository.dart';
 import '../theme/color.dart';
 import 'labeling_detail.dart';
-import 'login.dart';
 import 'new_labeling.dart';
 
 class EtichettaturaWidget extends StatefulWidget {
@@ -155,9 +150,9 @@ class _EtichettaturaWidgetState extends State<EtichettaturaWidget> {
                                           ),
                                           Text(
                                             'Lotto: ' +  label.batch! + '\n'
-                                            'Prodotto: ' + label.product!.description + ' ' + label.product!.variety +'\n'
+                                            'Prodotto: ' + label.product.description + ' ' + label.product.variety +'\n'
                                             'Peso: ' + label.total_weight! + ' kg\n'
-                                            'Squadra di raccolta: ' + label.team!.description,
+                                            'Squadra di raccolta: ' + label.team.description,
                                             style: FlutterFlowTheme.bodyText1,
                                           ),
                                         ],

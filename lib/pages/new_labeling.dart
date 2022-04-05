@@ -3,13 +3,11 @@ import 'package:agros_app/model/boxes_type.dart';
 import 'package:agros_app/model/pallet_type.dart';
 import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
-import 'package:agros_app/pages/home.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../blocs/get_customer.dart';
-import '../blocs/get_label.dart';
 import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
@@ -88,7 +86,7 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
     String weight = weightController.text.trim();
     String number = numberController.text.trim();
     String note = noteController.text.trim();
-    String progressive = palletController.text.trim();
+    //String progressive = palletController.text.trim();
 
     
     if(date.isNotEmpty && batch.isNotEmpty) {

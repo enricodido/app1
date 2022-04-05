@@ -1,14 +1,10 @@
-import 'package:agros_app/pages/shipment.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:easy_debounce/easy_debounce.dart';
+
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import '../blocs/get_carrier.dart';
 import '../blocs/get_customer.dart';
-import '../components/customButtonPrimary.dart';
 import '../components/customDialog.dart';
-import '../components/flutter_flow_drop_down.dart';
 import '../components/flutter_flow_theme.dart';
 import '../components/flutter_flow_widget.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +56,7 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
 
   void onsubmit() async {
     String date = dateController.text.trim();
-    String batch = progressiveController.text.trim();
+   // String batch = progressiveController.text.trim();
     String vehicle = vehicleController.text.trim();
     String note = noteController.text.trim();
 

@@ -3,15 +3,12 @@ import 'package:agros_app/model/boxes_type.dart';
 import 'package:agros_app/model/pallet_type.dart';
 import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
-import 'package:agros_app/pages/home.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
 import '../blocs/get_customer.dart';
-import '../blocs/get_label.dart';
 import '../blocs/get_pallet.dart';
 import '../blocs/get_product.dart';
 import '../blocs/get_team.dart';
