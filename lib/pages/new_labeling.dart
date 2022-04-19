@@ -165,6 +165,14 @@ class _NuovaEtichettaturaWidgetState extends State<NuovaEtichettaturaWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, EtichettaturaWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,

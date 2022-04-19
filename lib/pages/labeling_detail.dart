@@ -94,7 +94,7 @@ class _DettaglioEtichettaturaWidgetState
       dateController.text = args.label!.date;
       batchController.text = args.label!.batch!;
       numberController.text = args.label!.number;
-  
+      
       productId =  args.label!.product.id;
       boxId =  args.label!.box.id;
       palletId = args.label!.pallet.id;
@@ -129,7 +129,7 @@ class _DettaglioEtichettaturaWidgetState
  //   String progressive = palletController.text.trim();
 
     
-    if(selectedCustomer != null) {
+    if(weight != null) {
 
       setState(() {
         isLoading = true;
@@ -139,8 +139,8 @@ class _DettaglioEtichettaturaWidgetState
         final data = await getIt.get<Repository>().labelRepository!.recupdate(
           context,
           label!.id,
-          selectedProduct!.id.toString(),
-          selectedPallet!.id.toString() ,
+          selectedProduct!.id,
+          selectedPallet!.id ,
           date.toString()  ,
           batch.toString() ,
           weight.toString() ,
@@ -152,6 +152,7 @@ class _DettaglioEtichettaturaWidgetState
           
           
           );
+          print(label!.id);
           
         if(data) {
 
@@ -198,6 +199,14 @@ class _DettaglioEtichettaturaWidgetState
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, EtichettaturaWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,
@@ -315,7 +324,7 @@ class _DettaglioEtichettaturaWidgetState
                                         pallet.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -432,7 +441,7 @@ class _DettaglioEtichettaturaWidgetState
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -454,7 +463,7 @@ class _DettaglioEtichettaturaWidgetState
                                     box.description,
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
-                                        color:  Color(0xFF009648),
+                                        color: Colors.black,
                                         fontFamily: 'Open Sans'),
                                   ),
                                 );
@@ -620,7 +629,7 @@ class _DettaglioEtichettaturaWidgetState
                               iconSize: 25,
                               elevation: 16,
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -642,7 +651,7 @@ class _DettaglioEtichettaturaWidgetState
                                         customer.business_name ,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color:  Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );
@@ -690,7 +699,7 @@ class _DettaglioEtichettaturaWidgetState
                               elevation: 16,
 
                               style: const TextStyle(
-                                color:  Color(0xFF009648),
+                                color:  Colors.black,
                                 fontSize: 20,
                               ),
                               underline: Container(
@@ -712,7 +721,7 @@ class _DettaglioEtichettaturaWidgetState
                                         team.description,
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
-                                            color:  Color(0xFF009648),
+                                            color: Colors.black,
                                             fontFamily: 'Open Sans'),
                                       ),
                                     );

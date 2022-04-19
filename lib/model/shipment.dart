@@ -13,6 +13,9 @@ class Shipment {
     required this.note,
     required this.vehicle,
     required this.status,
+    required this.slotone,
+    required this.slottwo,
+    required this.slotthree,
 
 
   });
@@ -26,6 +29,9 @@ class Shipment {
   final String status;
   final CustomerModel customer;
   final CarrierModel carrier;
+  final bool slotone;
+  final bool slottwo;
+  final bool slotthree;
 
 
 
@@ -39,6 +45,9 @@ class Shipment {
     final String status = data['status'].toString();
     final CustomerModel customer = CustomerModel.fromData(data['customer']);
     final CarrierModel carrier = CarrierModel.fromData(data['carrier']);
+    final bool slotone = data['slotone'];
+    final bool slottwo = data['slottwo'];
+    final bool slotthree = data['slotthree'];
     //  final PalletModel pallet = PalletModel.fromData(data['pallet_type']);
     //  final BoxModel box = BoxModel.fromData(data['boxes_type']);
     //  final CustomerModel customer = CustomerModel.fromData(data['customer']);
@@ -54,6 +63,9 @@ class Shipment {
       customer: customer,
       vehicle: vehicle,
       status: status,
+      slotone: slotone,
+      slottwo: slottwo,
+      slotthree: slotthree,
       //  pallet: pallet,
       //  box: box,
       //  customer: customer,

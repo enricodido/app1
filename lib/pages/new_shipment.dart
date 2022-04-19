@@ -1,4 +1,5 @@
 
+import 'package:agros_app/pages/shipment.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -119,6 +120,14 @@ class _NuovaSpedizioneWidgetState extends State<NuovaSpedizioneWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, SpedizioneWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: FlutterFlowTheme.secondaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,

@@ -15,7 +15,7 @@ import 'carrier.dart';
 import 'label.dart';
 
 
-//const String HOST = 'https://checklist.deltacall.it/api/';
+//const String HOST = 'https://agros.delta2020.it/api/';
 const String HOST = 'http://192.168.1.94:8080/api/';
 
 class Repository {

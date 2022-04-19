@@ -36,6 +36,7 @@ final getIt = GetIt.instance;
 const String COMPLAINT_OPEN = '0';
 const String COMPLAINT_PROCESSING = '1';
 const String COMPLAINT_CLOSED = '2';
+const String COMPLAINT_SHIPPED = '3';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

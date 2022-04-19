@@ -3,6 +3,7 @@ import 'package:agros_app/model/boxes_type.dart';
 import 'package:agros_app/model/pallet_type.dart';
 import 'package:agros_app/model/product.dart';
 import 'package:agros_app/model/team.dart';
+import 'package:agros_app/pages/home.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -171,6 +172,14 @@ Future<void> scanQR() async {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, HomePagWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,

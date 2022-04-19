@@ -42,6 +42,14 @@ class _HomePagWidgetState extends State<HomePagWidget> {
     return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
+          actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, LoginPageWidget.ROUTE_NAME);}, ),
+        ],
           backgroundColor: FlutterFlowTheme.primaryColor,
           automaticallyImplyLeading: true,
           centerTitle: true,

@@ -75,7 +75,7 @@ flutter:
   uses-material-design: true
 
 flutter_icons:
-  image_path: "images/agrosApp-logo.png.png"
+  image_path: "images/agros-logo-apple-app.png"
   android: "launcher_icon"
   ios: true
   # To add assets to your application, add an assets section, like this:

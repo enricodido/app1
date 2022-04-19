@@ -139,6 +139,15 @@ void onsubmit() async {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, SpedizioneWidget.ROUTE_NAME);}, ),
+        ],
+          
         backgroundColor: FlutterFlowTheme.secondaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,
@@ -386,7 +395,7 @@ void onsubmit() async {
                             children: [
                               FFButtonWidget(
                                 onPressed: () async {
-                                  Navigator.pop(context);
+                                  Navigator.pushNamed(context, SpedizioneWidget.ROUTE_NAME);
                                 },
                                 text: 'Chiudi',
                                 options: FFButtonOptions(

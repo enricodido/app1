@@ -1,3 +1,4 @@
+import 'package:agros_app/pages/home.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -57,6 +58,14 @@ Future<void> scanQR() async {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, HomePagWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: FlutterFlowTheme.primaryColor,
         automaticallyImplyLeading: true,
         centerTitle: true,

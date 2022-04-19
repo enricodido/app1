@@ -174,4 +174,33 @@ Future<bool> prelabel(
       return false;
     }
   }
+
+  Future searchLabel(
+      {required BuildContext context, required String progressivo}) async {
+    try {
+      final response =
+          await repository.http!.get(url: 'search/' + progressivo.toString());
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        return {'pallet': data['pallet'], 'position': data['movement']};
+      } else {
+        showCustomDialog(
+            context: context,
+            type: CustomDialog.ERROR,
+            msg: 'Attenzione!\n' +
+                (jsonDecode(response.body)['msg'] ??
+                        'Errore.\nElemento non trovato!')
+                    .toString());
+        return null;
+      }
+    } catch (error) {
+      showCustomDialog(
+          context: context,
+          type: CustomDialog.ERROR,
+          msg: 'Attenzione!\nErrore.\nElemento non trovato!');
+      return null;
+    }
+  }
+
 }

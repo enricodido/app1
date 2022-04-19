@@ -1,3 +1,4 @@
+import 'package:agros_app/pages/home.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,14 @@ class _SpostamentoMagazzinoWidgetState
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+          icon:Icon(  Icons.arrow_back_rounded,
+                              color: FlutterFlowTheme.tertiaryColor,
+                              size: 40,
+                            ),
+          onPressed: () { Navigator.pushNamed(context, HomePagWidget.ROUTE_NAME);}, ),
+        ],
         backgroundColor: Color(0xFF6C6C6C),
         automaticallyImplyLeading: true,
         centerTitle: true,

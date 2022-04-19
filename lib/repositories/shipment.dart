@@ -42,6 +42,25 @@ class ShipmentRepository {
   }
 
 
+  Future<bool> change({required String shipment_id, String? slot}) async {
+    final response = await repository.http!.post(
+      url: 'change/shippings/' + shipment_id ,
+      bodyParameters: {
+      'slot': slot,
+    
+    });
+
+    final data = json.decode(response.body);
+    if (response.statusCode == 200) {
+
+      return true;
+    } else {
+
+      return false;
+    }
+  }
+
+
   Future<bool> record(
       context,
       String carrier_id ,
