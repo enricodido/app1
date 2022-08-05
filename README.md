@@ -1,4 +1,4 @@
-# agros_app
+# App
 
 A new Flutter project.
 
